@@ -1,0 +1,6 @@
+timestamp,user,path,hash,event
+2026-09-10 10:00:10,admin,/var/log/audit.log,e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855,CREATED
+2026-09-10 10:04:15,admin,/var/log/audit.log,f2ca1bb6c7e907d06dafe4687e579fce76b37e4e93b7605022da52e6ccc26fd2,MODIFIED
+2026-09-10 10:07:02,intruder,/var/log/audit.log,f2ca1bb6c7e907d06dafe4687e579fce76b37e4e93b7605022da52e6ccc26fd2,DELETED
+2026-09-10 10:07:45,intruder,/etc/shadow_backup,a58a7e0a29910d517c80521e106dfc2f0f492a5433cb83777d0cf0c090ba2b8f,DELETED
+2026-09-10 10:08:12,intruder,/var/log/auth.log,b7a12e098cb91845112fa5819028ab7799102938481029481920391209384012,DELETED

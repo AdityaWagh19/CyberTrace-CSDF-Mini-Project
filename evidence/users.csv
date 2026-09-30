@@ -1,0 +1,4 @@
+user_id,username,role,status
+1,admin,System Administrator,ACTIVE
+2,alice,Developer,ACTIVE
+3,bob,Analyst,ACTIVE
