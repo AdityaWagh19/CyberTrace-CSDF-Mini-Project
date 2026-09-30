@@ -89,74 +89,82 @@ export const CaseOverview: React.FC<CaseOverviewProps> = ({ caseId, fetchCases }
                 Chronological aggregation of threat events detected across all six forensic layers during incident execution.
               </p>
 
-              {/* Visual Timeline Waveform Graph matching Shards Users Overview */}
-              <div className="p-3 bg-light rounded border mb-3">
-                <div className="d-flex justify-content-between align-items-center mb-2">
-                  <span className="small fw-bold text-secondary">Attack Velocity &amp; Event Density (08:00 - 12:00)</span>
+              {/* Visual Timeline Waveform Graph */}
+              <div className="p-3 bg-white rounded border mb-3">
+                <div className="d-flex justify-content-between align-items-center mb-3">
+                  <div>
+                    <span className="small fw-bold text-dark d-block">Incident Attack Velocity &amp; Chronology</span>
+                    <span className="text-muted" style={{ fontSize: "0.75rem" }}>Timeline correlation from 08:30 to 11:30 incident window</span>
+                  </div>
                   <div className="d-flex align-items-center gap-3 small text-muted">
                     <span className="d-flex align-items-center gap-1">
-                      <span style={{ width: 10, height: 10, backgroundColor: "#007bff", borderRadius: 2 }}></span>
-                      Current Incident
+                      <span style={{ width: 8, height: 8, backgroundColor: "#007bff", borderRadius: 2 }}></span>
+                      Threat Activity
                     </span>
                     <span className="d-flex align-items-center gap-1">
-                      <span style={{ width: 10, height: 10, backgroundColor: "#e1e5eb", borderRadius: 2 }}></span>
-                      Baseline Average
+                      <span style={{ width: 8, height: 8, backgroundColor: "#ced4da", borderRadius: 2 }}></span>
+                      Baseline Normal
                     </span>
                   </div>
                 </div>
 
-                <svg viewBox="0 0 700 160" width="100%" height="160" preserveAspectRatio="none">
-                  {/* Grid Lines */}
-                  <line x1="0" y1="40" x2="700" y2="40" stroke="#e8ecf2" strokeDasharray="3,3" />
-                  <line x1="0" y1="80" x2="700" y2="80" stroke="#e8ecf2" strokeDasharray="3,3" />
-                  <line x1="0" y1="120" x2="700" y2="120" stroke="#e8ecf2" strokeDasharray="3,3" />
+                <div style={{ width: "100%", height: "140px", overflow: "hidden" }}>
+                  <svg viewBox="0 0 700 130" width="100%" height="130">
+                    <defs>
+                      <linearGradient id="areaGradient" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#007bff" stopOpacity="0.20" />
+                        <stop offset="100%" stopColor="#007bff" stopOpacity="0.0" />
+                      </linearGradient>
+                    </defs>
 
-                  {/* Baseline curve */}
-                  <path
-                    d="M0,140 Q100,130 200,135 T400,120 T600,130 T700,135"
-                    fill="none"
-                    stroke="#ced4da"
-                    strokeWidth="2"
-                    strokeDasharray="4,4"
-                  />
+                    {/* Horizontal Reference Lines */}
+                    <line x1="0" y1="25" x2="700" y2="25" stroke="#f1f3f6" strokeWidth="1" strokeDasharray="3,3" />
+                    <line x1="0" y1="65" x2="700" y2="65" stroke="#f1f3f6" strokeWidth="1" strokeDasharray="3,3" />
+                    <line x1="0" y1="105" x2="700" y2="105" stroke="#f1f3f6" strokeWidth="1" strokeDasharray="3,3" />
 
-                  {/* Incident Curve with Fill */}
-                  <defs>
-                    <linearGradient id="areaGradient" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#007bff" stopOpacity="0.25" />
-                      <stop offset="100%" stopColor="#007bff" stopOpacity="0.01" />
-                    </linearGradient>
-                  </defs>
-                  <path
-                    d="M0,145 Q80,135 150,110 T280,30 T420,70 T550,25 T640,65 T700,15"
-                    fill="none"
-                    stroke="#007bff"
-                    strokeWidth="3"
-                  />
-                  <path
-                    d="M0,145 Q80,135 150,110 T280,30 T420,70 T550,25 T640,65 T700,15 L700,160 L0,160 Z"
-                    fill="url(#areaGradient)"
-                  />
+                    {/* Baseline Normal Line */}
+                    <path
+                      d="M0,110 Q100,105 200,108 T400,102 T600,106 T700,108"
+                      fill="none"
+                      stroke="#ced4da"
+                      strokeWidth="1.5"
+                      strokeDasharray="4,4"
+                    />
 
-                  {/* Highlight Points */}
-                  <circle cx="150" cy="110" r="4" fill="#007bff" />
-                  <circle cx="280" cy="30" r="5" fill="#c4183c" />
-                  <circle cx="420" cy="70" r="4" fill="#ffb400" />
-                  <circle cx="550" cy="25" r="5" fill="#c4183c" />
-                  <circle cx="700" cy="15" r="4" fill="#17c671" />
-                </svg>
+                    {/* Incident Curve Filled Area */}
+                    <path
+                      d="M0,115 Q70,110 140,85 T280,20 T420,55 T540,18 T630,50 T700,12 L700,130 L0,130 Z"
+                      fill="url(#areaGradient)"
+                    />
 
-                <div className="d-flex justify-content-between text-muted" style={{ fontSize: "0.72rem" }}>
+                    {/* Incident Line */}
+                    <path
+                      d="M0,115 Q70,110 140,85 T280,20 T420,55 T540,18 T630,50 T700,12"
+                      fill="none"
+                      stroke="#007bff"
+                      strokeWidth="2.5"
+                    />
+
+                    {/* Threat Phase Indicators */}
+                    <circle cx="140" cy="85" r="4.5" fill="#007bff" />
+                    <circle cx="280" cy="20" r="5" fill="#c4183c" />
+                    <circle cx="420" cy="55" r="4.5" fill="#ffb400" />
+                    <circle cx="540" cy="18" r="5" fill="#c4183c" />
+                    <circle cx="700" cy="12" r="4.5" fill="#17c671" />
+                  </svg>
+                </div>
+
+                <div className="d-flex justify-content-between text-muted pt-2 border-top" style={{ fontSize: "0.72rem" }}>
                   <span>08:30 Recon Scan</span>
                   <span>08:45 SSH Brute Force</span>
                   <span>09:22 Exfiltration (14MB)</span>
                   <span>10:00 Malware Execution</span>
-                  <span>11:00 Anti-Forensic Deletions</span>
+                  <span>11:00 Anti-Forensic Wipe</span>
                 </div>
               </div>
 
               {/* Brief Case Information Block */}
-              <div className="p-3 bg-white rounded border">
+              <div className="p-3 bg-light rounded border">
                 <div className="d-flex justify-content-between align-items-center mb-1">
                   <span className="fw-bold small text-dark">Scope &amp; Incident Summary</span>
                   <span className="small text-muted">Investigator: {dashboardData?.investigator || defaultCase.investigator}</span>

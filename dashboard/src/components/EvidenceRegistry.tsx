@@ -83,7 +83,7 @@ export const EvidenceRegistry: React.FC<EvidenceRegistryProps> = ({ caseId }) =>
           file_size_bytes: uploadFile.size,
           evidence_type: evidenceType,
           source: source || "Investigator Upload",
-          custody_officer: "Aditya Wagh",
+          custody_officer: "John Doe",
           acquired_at: new Date().toISOString().replace("T", " ").substring(0, 19),
           notes: notes || "Client-side acquired digital artifact with verified SHA-256 cryptographic digest.",
         };
@@ -259,7 +259,7 @@ export const EvidenceRegistry: React.FC<EvidenceRegistryProps> = ({ caseId }) =>
                       </span>
                     </td>
                     <td>
-                      <span className="small fw-semibold text-dark">{item.custody_officer || "Aditya Wagh"}</span>
+                      <span className="small fw-semibold text-dark">{item.custody_officer || "John Doe"}</span>
                     </td>
                     <td>
                       <span className="small text-muted font-monospace">{item.acquired_at || "2026-09-30 08:45:00"}</span>

@@ -55,7 +55,7 @@ export const ReportGenerator: React.FC<ReportGeneratorProps> = ({ caseId }) => {
       doc.setFontSize(10);
       doc.text(`Case ID: ${reportData.case_id}`, 14, 38);
       doc.text(`Case Title: ${reportData.case_name || "N/A"}`, 14, 44);
-      doc.text(`Lead Examiner: ${reportData.investigator || "Aditya Wagh"}`, 14, 50);
+      doc.text(`Lead Examiner: ${reportData.investigator || "John Doe"}`, 14, 50);
       doc.text(`Generation Date: ${new Date().toISOString().substring(0, 10)}`, 14, 56);
       doc.text(`Risk Assessment: ${reportData.risk_level || "HIGH"} (Score: ${reportData.risk_score || 8.5}/10)`, 14, 62);
 
@@ -80,7 +80,7 @@ export const ReportGenerator: React.FC<ReportGeneratorProps> = ({ caseId }) => {
         e.filename,
         e.evidence_type?.toUpperCase() || "ARTIFACT",
         (e.sha256_hash || "").substring(0, 24) + "...",
-        e.custody_officer || "Aditya Wagh",
+        e.custody_officer || "John Doe",
       ]);
 
       autoTable(doc, {
@@ -190,7 +190,7 @@ export const ReportGenerator: React.FC<ReportGeneratorProps> = ({ caseId }) => {
               <Row className="g-3">
                 <Col xs={12} md={3}>
                   <div className="small text-muted">Lead Examiner</div>
-                  <div className="fw-bold text-dark">{reportData.investigator || "Aditya Wagh"}</div>
+                  <div className="fw-bold text-dark">{reportData.investigator || "John Doe"}</div>
                 </Col>
                 <Col xs={12} md={3}>
                   <div className="small text-muted">Case Status</div>

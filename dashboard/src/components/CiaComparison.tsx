@@ -76,32 +76,33 @@ export const CiaComparison: React.FC<CiaComparisonProps> = ({ caseId }) => {
   };
 
   const generateBarData = () => {
-    const techniques = techniqueScores.map((s) => s.technique);
+    const labels = ["Logs", "Network", "Integrity", "Malware", "Metadata", "Anti-Forensics"];
     const conf = techniqueScores.map((s) => s.confidentiality);
     const integ = techniqueScores.map((s) => s.integrity);
     const avail = techniqueScores.map((s) => s.availability);
 
     return {
       data: [
-        { x: techniques, y: conf, name: "Confidentiality", type: "bar" as const, marker: { color: "#007bff" } },
-        { x: techniques, y: integ, name: "Integrity", type: "bar" as const, marker: { color: "#17c671" } },
-        { x: techniques, y: avail, name: "Availability", type: "bar" as const, marker: { color: "#ffb400" } },
+        { x: labels, y: conf, name: "Confidentiality", type: "bar" as const, marker: { color: "#007bff" } },
+        { x: labels, y: integ, name: "Integrity", type: "bar" as const, marker: { color: "#17c671" } },
+        { x: labels, y: avail, name: "Availability", type: "bar" as const, marker: { color: "#ffb400" } },
       ],
       layout: {
         barmode: "group" as const,
-        title: { text: "Forensic Technique Comparison Across CIA Triad" },
-        yaxis: { title: { text: "Score (1-10 Scale)" }, range: [0, 11], dtick: 2 },
-        xaxis: { tickangle: -15 },
-        margin: { b: 80, l: 50, r: 20, t: 50 },
         autosize: true,
-        plot_bgcolor: "#fafbfe",
+        height: 340,
+        margin: { b: 35, l: 35, r: 15, t: 25 },
+        legend: { orientation: "h" as const, x: 0, y: 1.15, font: { size: 11 } },
+        yaxis: { range: [0, 11], dtick: 2, gridcolor: "#f1f3f6", zeroline: false },
+        xaxis: { gridcolor: "transparent", tickfont: { size: 11, color: "#5a6169" } },
+        plot_bgcolor: "#ffffff",
         paper_bgcolor: "#ffffff",
       },
     };
   };
 
   const generateRadarData = () => {
-    const techniques = techniqueScores.map((s) => s.technique);
+    const labels = ["Logs", "Network", "Integrity", "Malware", "Metadata", "Anti-Forensics"];
     const conf = techniqueScores.map((s) => s.confidentiality);
     const integ = techniqueScores.map((s) => s.integrity);
     const avail = techniqueScores.map((s) => s.availability);
@@ -111,36 +112,38 @@ export const CiaComparison: React.FC<CiaComparisonProps> = ({ caseId }) => {
         {
           type: "scatterpolar" as const,
           r: [...conf, conf[0]],
-          theta: [...techniques, techniques[0]],
+          theta: [...labels, labels[0]],
           fill: "toself" as const,
           name: "Confidentiality",
-          line: { color: "#007bff" },
+          line: { color: "#007bff", width: 2 },
         },
         {
           type: "scatterpolar" as const,
           r: [...integ, integ[0]],
-          theta: [...techniques, techniques[0]],
+          theta: [...labels, labels[0]],
           fill: "toself" as const,
           name: "Integrity",
-          line: { color: "#17c671" },
+          line: { color: "#17c671", width: 2 },
         },
         {
           type: "scatterpolar" as const,
           r: [...avail, avail[0]],
-          theta: [...techniques, techniques[0]],
+          theta: [...labels, labels[0]],
           fill: "toself" as const,
           name: "Availability",
-          line: { color: "#ffb400" },
+          line: { color: "#ffb400", width: 2 },
         },
       ],
       layout: {
         polar: {
-          radialaxis: { visible: true, range: [0, 10] },
+          radialaxis: { visible: true, range: [0, 10], tickfont: { size: 9 }, gridcolor: "#f1f3f6" },
+          angularaxis: { tickfont: { size: 11, color: "#5a6169" } },
           bgcolor: "#fafbfe",
         },
-        title: { text: "CIA Triad Radar Analysis" },
-        margin: { b: 50, l: 50, r: 50, t: 50 },
         autosize: true,
+        height: 340,
+        margin: { b: 30, l: 30, r: 30, t: 25 },
+        legend: { orientation: "h" as const, x: 0, y: 1.15, font: { size: 11 } },
         paper_bgcolor: "#ffffff",
       },
     };
@@ -233,16 +236,17 @@ export const CiaComparison: React.FC<CiaComparisonProps> = ({ caseId }) => {
                 <span>Interactive Plot</span>
               </span>
             </div>
-            <div className="shards-card-body p-2">
+            <div className="shards-card-body p-2" style={{ minHeight: "350px", overflow: "hidden" }}>
               {PlotComponent ? (
                 <PlotComponent
                   data={barChart.data as any}
                   layout={barChart.layout as any}
                   useResizeHandler={true}
-                  style={{ width: "100%", height: "380px" }}
+                  config={{ responsive: true, displayModeBar: false }}
+                  style={{ width: "100%", height: "340px" }}
                 />
               ) : (
-                <div className="d-flex align-items-center justify-content-center" style={{ height: "380px" }}>
+                <div className="d-flex align-items-center justify-content-center" style={{ height: "340px" }}>
                   <span className="text-muted small">Loading chart engine...</span>
                 </div>
               )}
@@ -259,16 +263,17 @@ export const CiaComparison: React.FC<CiaComparisonProps> = ({ caseId }) => {
                 <span>Polar Axis</span>
               </span>
             </div>
-            <div className="shards-card-body p-2">
+            <div className="shards-card-body p-2" style={{ minHeight: "350px", overflow: "hidden" }}>
               {PlotComponent ? (
                 <PlotComponent
                   data={radarChart.data as any}
                   layout={radarChart.layout as any}
                   useResizeHandler={true}
-                  style={{ width: "100%", height: "380px" }}
+                  config={{ responsive: true, displayModeBar: false }}
+                  style={{ width: "100%", height: "340px" }}
                 />
               ) : (
-                <div className="d-flex align-items-center justify-content-center" style={{ height: "380px" }}>
+                <div className="d-flex align-items-center justify-content-center" style={{ height: "340px" }}>
                   <span className="text-muted small">Loading chart engine...</span>
                 </div>
               )}

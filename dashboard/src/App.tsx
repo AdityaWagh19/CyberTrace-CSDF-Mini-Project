@@ -47,7 +47,7 @@ function App() {
   const [activeTab, setActiveTab] = useState<string>("case-overview");
   const [showNewCaseModal, setShowNewCaseModal] = useState<boolean>(false);
   const [newCaseName, setNewCaseName] = useState<string>("");
-  const [newInvestigator, setNewInvestigator] = useState<string>("Aditya Wagh");
+  const [newInvestigator, setNewInvestigator] = useState<string>("John Doe");
   const [newDescription, setNewDescription] = useState<string>("");
   const [isDemoMode, setIsDemoMode] = useState<boolean>(true);
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -282,10 +282,10 @@ function App() {
 
             {/* User Profile Chip */}
             <div className="shards-user-chip">
-              <div className="shards-user-avatar">AW</div>
+              <div className="shards-user-avatar">JD</div>
               <div className="d-none d-md-block text-start">
                 <div style={{ fontSize: "0.82rem", fontWeight: 600, color: "#2e384d", lineHeight: 1.1 }}>
-                  Aditya Wagh
+                  John Doe
                 </div>
                 <div style={{ fontSize: "0.68rem", color: "#818ea3" }}>
                   Lead Examiner
@@ -324,87 +324,73 @@ function App() {
             </div>
           </div>
 
-          {/* Shards 5-Card Stats Row with Sparklines */}
-          <div className="shards-stats-row">
-            {/* Card 1: Evidence */}
-            <div className="shards-stat-card">
-              <div>
-                <div className="shards-stat-label">Total Evidence Items</div>
-                <div className="shards-stat-value">{currentCase.evidence_count || 8}</div>
-                <div className="shards-stat-change positive">
-                  <IconArrowUp size={12} />
-                  <span>100% Hash Verified</span>
+          {/* Streamlined Executive KPI Row (Only on Overview to keep UI uncluttered) */}
+          {activeTab === "case-overview" && (
+            <div className="shards-stats-row mb-4">
+              {/* Card 1: Evidence Items */}
+              <div className="shards-stat-card">
+                <div>
+                  <div className="shards-stat-label">Total Evidence Items</div>
+                  <div className="shards-stat-value">{currentCase.evidence_count || 8}</div>
+                  <div className="shards-stat-change positive">
+                    <IconArrowUp size={12} />
+                    <span>100% Hash Verified</span>
+                  </div>
                 </div>
+                <svg className="shards-stat-sparkline" viewBox="0 0 200 35" preserveAspectRatio="none">
+                  <path d="M0,25 Q30,10 60,20 T120,8 T160,22 T200,10" fill="none" stroke="#007bff" strokeWidth="2" />
+                  <path d="M0,25 Q30,10 60,20 T120,8 T160,22 T200,10 V35 H0 Z" fill="rgba(0,123,255,0.06)" />
+                </svg>
               </div>
-              <svg className="shards-stat-sparkline" viewBox="0 0 200 40" preserveAspectRatio="none">
-                <path d="M0,30 Q25,10 50,22 T100,8 T150,24 T200,10" fill="none" stroke="#007bff" strokeWidth="2.5" />
-                <path d="M0,30 Q25,10 50,22 T100,8 T150,24 T200,10 V40 H0 Z" fill="rgba(0,123,255,0.08)" />
-              </svg>
-            </div>
 
-            {/* Card 2: Findings */}
-            <div className="shards-stat-card">
-              <div>
-                <div className="shards-stat-label">Detected Findings</div>
-                <div className="shards-stat-value">{currentCase.findings_count || 14}</div>
-                <div className="shards-stat-change negative">
-                  <IconArrowUp size={12} />
-                  <span>Brute-force &amp; Exfil</span>
+              {/* Card 2: Suspicious Findings */}
+              <div className="shards-stat-card">
+                <div>
+                  <div className="shards-stat-label">Suspicious Findings</div>
+                  <div className="shards-stat-value">{currentCase.findings_count || 14}</div>
+                  <div className="shards-stat-change negative">
+                    <IconArrowUp size={12} />
+                    <span>Multi-Vector Threats</span>
+                  </div>
                 </div>
+                <svg className="shards-stat-sparkline" viewBox="0 0 200 35" preserveAspectRatio="none">
+                  <path d="M0,28 Q35,15 70,25 T130,5 T170,20 T200,12" fill="none" stroke="#c4183c" strokeWidth="2" />
+                  <path d="M0,28 Q35,15 70,25 T130,5 T170,20 T200,12 V35 H0 Z" fill="rgba(196,24,60,0.06)" />
+                </svg>
               </div>
-              <svg className="shards-stat-sparkline" viewBox="0 0 200 40" preserveAspectRatio="none">
-                <path d="M0,35 Q30,20 60,30 T120,5 T160,25 T200,12" fill="none" stroke="#c4183c" strokeWidth="2.5" />
-                <path d="M0,35 Q30,20 60,30 T120,5 T160,25 T200,12 V40 H0 Z" fill="rgba(196,24,60,0.08)" />
-              </svg>
-            </div>
 
-            {/* Card 3: Risk Assessment */}
-            <div className="shards-stat-card">
-              <div>
-                <div className="shards-stat-label">Overall Risk Level</div>
-                <div className="shards-stat-value">{currentCase.risk_score || 8.5} <span style={{ fontSize: "0.9rem", color: "#818ea3" }}>/ 10</span></div>
-                <div className="shards-stat-change negative">
-                  <span>Critical Assessment</span>
+              {/* Card 3: Overall Risk */}
+              <div className="shards-stat-card">
+                <div>
+                  <div className="shards-stat-label">Investigation Risk</div>
+                  <div className="shards-stat-value">{currentCase.risk_score || 8.5} <span style={{ fontSize: "0.85rem", color: "#818ea3" }}>/ 10</span></div>
+                  <div className="shards-stat-change negative">
+                    <span>Critical Risk Tier</span>
+                  </div>
                 </div>
+                <svg className="shards-stat-sparkline" viewBox="0 0 200 35" preserveAspectRatio="none">
+                  <path d="M0,22 Q35,10 70,20 T130,8 T170,18 T200,6" fill="none" stroke="#ffb400" strokeWidth="2" />
+                  <path d="M0,22 Q35,10 70,20 T130,8 T170,18 T200,6 V35 H0 Z" fill="rgba(255,180,0,0.06)" />
+                </svg>
               </div>
-              <svg className="shards-stat-sparkline" viewBox="0 0 200 40" preserveAspectRatio="none">
-                <path d="M0,28 Q35,12 70,25 T130,10 T170,20 T200,8" fill="none" stroke="#ffb400" strokeWidth="2.5" />
-                <path d="M0,28 Q35,12 70,25 T130,10 T170,20 T200,8 V40 H0 Z" fill="rgba(255,180,0,0.08)" />
-              </svg>
-            </div>
 
-            {/* Card 4: CIA Score */}
-            <div className="shards-stat-card">
-              <div>
-                <div className="shards-stat-label">CIA Triad Score</div>
-                <div className="shards-stat-value">134 <span style={{ fontSize: "0.9rem", color: "#818ea3" }}>/ 180</span></div>
-                <div className="shards-stat-change positive">
-                  <IconArrowUp size={12} />
-                  <span>Strong Coverage</span>
+              {/* Card 4: CIA Benchmark */}
+              <div className="shards-stat-card">
+                <div>
+                  <div className="shards-stat-label">CIA Benchmark Score</div>
+                  <div className="shards-stat-value">134 <span style={{ fontSize: "0.85rem", color: "#818ea3" }}>/ 180</span></div>
+                  <div className="shards-stat-change positive">
+                    <IconArrowUp size={12} />
+                    <span>6 Active Pipelines</span>
+                  </div>
                 </div>
+                <svg className="shards-stat-sparkline" viewBox="0 0 200 35" preserveAspectRatio="none">
+                  <path d="M0,26 Q30,14 65,22 T125,10 T165,16 T200,6" fill="none" stroke="#17c671" strokeWidth="2" />
+                  <path d="M0,26 Q30,14 65,22 T125,10 T165,16 T200,6 V35 H0 Z" fill="rgba(23,198,113,0.06)" />
+                </svg>
               </div>
-              <svg className="shards-stat-sparkline" viewBox="0 0 200 40" preserveAspectRatio="none">
-                <path d="M0,32 Q30,18 65,26 T125,12 T165,18 T200,6" fill="none" stroke="#17c671" strokeWidth="2.5" />
-                <path d="M0,32 Q30,18 65,26 T125,12 T165,18 T200,6 V40 H0 Z" fill="rgba(23,198,113,0.08)" />
-              </svg>
             </div>
-
-            {/* Card 5: Techniques */}
-            <div className="shards-stat-card">
-              <div>
-                <div className="shards-stat-label">Techniques Active</div>
-                <div className="shards-stat-value">6 <span style={{ fontSize: "0.9rem", color: "#818ea3" }}>/ 6</span></div>
-                <div className="shards-stat-change positive">
-                  <IconArrowUp size={12} />
-                  <span>100% Pipeline Online</span>
-                </div>
-              </div>
-              <svg className="shards-stat-sparkline" viewBox="0 0 200 40" preserveAspectRatio="none">
-                <path d="M0,25 Q40,5 80,18 T140,8 T180,22 T200,10" fill="none" stroke="#00b8d8" strokeWidth="2.5" />
-                <path d="M0,25 Q40,5 80,18 T140,8 T180,22 T200,10 V40 H0 Z" fill="rgba(0,184,216,0.08)" />
-              </svg>
-            </div>
-          </div>
+          )}
 
           {/* Module Router View */}
           <div className="shards-module-content">

@@ -5,17 +5,17 @@
 :root {
   --shards-primary: #007bff;
   --shards-primary-hover: #0069d9;
-  --shards-secondary: #5a6169;
+  --shards-secondary: #6c757d;
   --shards-success: #17c671;
   --shards-info: #00b8d8;
   --shards-warning: #ffb400;
   --shards-danger: #c4183c;
-  --shards-dark: #2e384d;
+  --shards-dark: #212529;
   --shards-light: #f8f9fa;
-  --shards-bg: #f5f6f8;
-  --shards-border: #e1e5eb;
-  --shards-card-border: #e1e5eb;
-  --shards-muted: #818ea3;
+  --shards-bg: #f8f9fc;
+  --shards-border: #e9edf2;
+  --shards-card-border: #e9edf2;
+  --shards-muted: #8c98a9;
   --shards-sidebar-width: 250px;
 }
 
@@ -253,14 +253,19 @@ body {
 .shards-stat-card {
   background: #ffffff;
   border: 1px solid var(--shards-card-border);
-  border-radius: 0.625rem;
-  padding: 1.25rem 1.25rem 0.75rem 1.25rem;
-  box-shadow: 0 0.125rem 0.25rem rgba(90, 97, 105, 0.04);
+  border-radius: 0.5rem;
+  padding: 1.15rem 1.25rem 0.65rem 1.25rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02), 0 2px 6px rgba(0, 0, 0, 0.02);
   position: relative;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.shards-stat-card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
 .shards-stat-label {
@@ -269,11 +274,11 @@ body {
   color: var(--shards-muted);
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  margin-bottom: 0.35rem;
+  margin-bottom: 0.25rem;
 }
 
 .shards-stat-value {
-  font-size: 1.625rem;
+  font-size: 1.5rem;
   font-weight: 700;
   color: var(--shards-dark);
   line-height: 1.2;
@@ -297,8 +302,8 @@ body {
 }
 
 .shards-stat-sparkline {
-  margin-top: 0.5rem;
-  height: 35px;
+  margin-top: 0.35rem;
+  height: 32px;
   width: 100%;
 }
 
@@ -306,17 +311,17 @@ body {
 .shards-card {
   background: #ffffff;
   border: 1px solid var(--shards-card-border);
-  border-radius: 0.625rem;
-  box-shadow: 0 0.125rem 0.25rem rgba(90, 97, 105, 0.04);
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02), 0 2px 6px rgba(0, 0, 0, 0.02);
   margin-bottom: 1.5rem;
 }
 
 .shards-card-header {
-  padding: 1.15rem 1.5rem;
+  padding: 1rem 1.35rem;
   border-bottom: 1px solid var(--shards-border);
   background: #ffffff;
-  border-top-left-radius: 0.625rem;
-  border-top-right-radius: 0.625rem;
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
   display: flex;
   align-items: center;
   justify-content: space-between;

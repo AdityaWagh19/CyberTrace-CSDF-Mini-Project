@@ -15,14 +15,14 @@ const DEMO_PDF_METADATA = {
   format: "PDF (v1.7)",
   page_count: 3,
   is_encrypted: false,
-  author: "Aditya Wagh",
+  author: "John Doe",
   creator: "Microsoft Word for Windows",
   producer: "ReportLab PDF Library 4.0",
   creation_date: "2026-09-30 08:15:00",
   mod_date: "2026-09-30 08:15:00",
   pdf_metadata: {
     Title: "Incident Briefing and Artifact Dossier",
-    Author: "Aditya Wagh",
+    Author: "John Doe",
     Subject: "Digital Forensics Examination",
     Keywords: "forensics, incident response, evidence",
     Creator: "Microsoft Word for Windows",
@@ -204,7 +204,7 @@ export const MetadataAnalysis: React.FC<MetadataAnalysisProps> = ({ caseId }) =>
             <div className="shards-stat-card">
               <div className="shards-stat-label">Document Author</div>
               <div className="shards-stat-value text-primary" style={{ fontSize: "1.25rem" }}>
-                {metaResults.author || "Aditya Wagh"}
+                {metaResults.author || "John Doe"}
               </div>
               <div className="shards-stat-change positive">
                 <IconCheck size={12} />
@@ -266,7 +266,7 @@ export const MetadataAnalysis: React.FC<MetadataAnalysisProps> = ({ caseId }) =>
                     </tr>
                     <tr>
                       <td className="fw-bold text-dark">Author / Originator</td>
-                      <td><span className="fw-semibold text-primary">{metaResults.author || "Aditya Wagh"}</span></td>
+                      <td><span className="fw-semibold text-primary">{metaResults.author || "John Doe"}</span></td>
                       <td><span className="small text-muted">User Accountability</span></td>
                     </tr>
                     <tr>
