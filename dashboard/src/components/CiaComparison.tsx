@@ -1,10 +1,18 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { Card, Table, Badge, Row, Col, Alert } from "react-bootstrap";
 import axios from "axios";
-import Plotly from "plotly.js/dist/plotly.min.js";
 import createPlotlyComponent from "react-plotly.js/factory";
 
-const Plot = createPlotlyComponent(Plotly);
+let cachedPlot: any = null;
+const getPlotComponent = () => {
+  if (cachedPlot) return cachedPlot;
+  const plotly = typeof window !== "undefined" ? (window as any).Plotly : null;
+  if (plotly) {
+    cachedPlot = createPlotlyComponent(plotly);
+    return cachedPlot;
+  }
+  return null;
+};
 
 const API_BASE = process.env.REACT_APP_API_URL || "http://localhost:8000";
 
@@ -22,8 +30,22 @@ const DEFAULT_SCORES = [
 ];
 
 export const CiaComparison: React.FC<CiaComparisonProps> = ({ caseId }) => {
+  const [PlotComponent, setPlotComponent] = useState<any>(() => getPlotComponent());
   const [techniqueScores, setTechniqueScores] = useState<any[]>([]);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!PlotComponent) {
+      const interval = setInterval(() => {
+        const comp = getPlotComponent();
+        if (comp) {
+          setPlotComponent(() => comp);
+          clearInterval(interval);
+        }
+      }, 100);
+      return () => clearInterval(interval);
+    }
+  }, [PlotComponent]);
 
   const fetchCiaData = useCallback(async () => {
     setErrorMsg(null);
@@ -183,22 +205,34 @@ export const CiaComparison: React.FC<CiaComparisonProps> = ({ caseId }) => {
         <Row className="g-4 mb-4">
           <Col xs={12} lg={6}>
             <Card className="border h-100 p-2">
-              <Plot
-                data={barChart.data as any}
-                layout={barChart.layout as any}
-                useResizeHandler={true}
-                style={{ width: "100%", height: "400px" }}
-              />
+              {PlotComponent ? (
+                <PlotComponent
+                  data={barChart.data as any}
+                  layout={barChart.layout as any}
+                  useResizeHandler={true}
+                  style={{ width: "100%", height: "400px" }}
+                />
+              ) : (
+                <div className="d-flex align-items-center justify-content-center" style={{ height: "400px" }}>
+                  <span className="text-muted">Loading visualization engine...</span>
+                </div>
+              )}
             </Card>
           </Col>
           <Col xs={12} lg={6}>
             <Card className="border h-100 p-2">
-              <Plot
-                data={radarChart.data as any}
-                layout={radarChart.layout as any}
-                useResizeHandler={true}
-                style={{ width: "100%", height: "400px" }}
-              />
+              {PlotComponent ? (
+                <PlotComponent
+                  data={radarChart.data as any}
+                  layout={radarChart.layout as any}
+                  useResizeHandler={true}
+                  style={{ width: "100%", height: "400px" }}
+                />
+              ) : (
+                <div className="d-flex align-items-center justify-content-center" style={{ height: "400px" }}>
+                  <span className="text-muted">Loading visualization engine...</span>
+                </div>
+              )}
             </Card>
           </Col>
         </Row>
