@@ -8,6 +8,10 @@
   "workspaces": [
     "dashboard"
   ],
+  "overrides": {
+    "ajv": "6.12.6",
+    "ajv-keywords": "3.5.2"
+  },
   "scripts": {
     "build": "if [ -d \"dashboard\" ]; then cd dashboard && CI=false GENERATE_SOURCEMAP=false npm run build && cp -r build ../build 2>/dev/null || true; else CI=false GENERATE_SOURCEMAP=false npm run build && mkdir -p dashboard && cp -r build dashboard/ 2>/dev/null || true; fi"
   }
