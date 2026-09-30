@@ -1,8 +1,7 @@
 {
-  "installCommand": "cd dashboard && npm install --legacy-peer-deps",
-  "buildCommand": "cd dashboard && npm install --legacy-peer-deps && npm run build",
+  "installCommand": "if [ -d \"dashboard\" ]; then cd dashboard; fi && npm install --legacy-peer-deps",
+  "buildCommand": "if [ -d \"dashboard\" ]; then cd dashboard && npm run build && cp -r build ../build 2>/dev/null || true; else npm run build && mkdir -p dashboard && cp -r build dashboard/ 2>/dev/null || true; fi",
   "outputDirectory": "dashboard/build",
-  "framework": "create-react-app",
   "rewrites": [
     {
       "source": "/api/(.*)",

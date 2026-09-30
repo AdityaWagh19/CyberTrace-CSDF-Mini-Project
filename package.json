@@ -2,7 +2,10 @@
   "name": "cybertrace",
   "version": "1.0.0",
   "private": true,
+  "workspaces": [
+    "dashboard"
+  ],
   "scripts": {
-    "build": "cd dashboard && npm install --legacy-peer-deps && npm run build"
+    "build": "if [ -d \"dashboard\" ]; then cd dashboard && npm run build && cp -r build ../build 2>/dev/null || true; else npm run build && mkdir -p dashboard && cp -r build dashboard/ 2>/dev/null || true; fi"
   }
 }
