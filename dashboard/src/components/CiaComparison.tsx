@@ -161,7 +161,6 @@ export const CiaComparison: React.FC<CiaComparisonProps> = ({ caseId }) => {
             <IconCiaTriad size={16} />
             <span>Technique Evaluation: CIA Triad Matrix &amp; Comparative Benchmark</span>
           </h6>
-          <span className="shards-badge shards-badge-primary">Standardized 1-10 Scale</span>
         </div>
         <div className="shards-card-body">
           <p className="text-muted small mb-0">
@@ -176,7 +175,6 @@ export const CiaComparison: React.FC<CiaComparisonProps> = ({ caseId }) => {
       <div className="shards-card mb-4">
         <div className="shards-card-header">
           <h6 className="shards-card-title">CIA Evaluation Matrix &amp; Technique Contributions</h6>
-          <span className="shards-badge shards-badge-success">Triad Benchmark: 134 / 180</span>
         </div>
         <div className="p-0">
           <div className="table-responsive">

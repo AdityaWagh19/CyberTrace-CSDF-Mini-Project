@@ -99,7 +99,6 @@ export const DeletedFileAnalysis: React.FC<DeletedFileAnalysisProps> = ({ caseId
             <IconAntiForensics size={16} />
             <span>Technique 5: Deleted-File Events &amp; Anti-Forensics Wiper Analysis</span>
           </h6>
-          <span className="shards-badge shards-badge-primary">MITRE T1070 (Indicator Removal)</span>
         </div>
         <div className="shards-card-body">
           <p className="text-muted small mb-3">

@@ -98,7 +98,6 @@ export const NetworkAnalysis: React.FC<NetworkAnalysisProps> = ({ caseId }) => {
             <IconNetwork size={16} />
             <span>Technique 2: Network Forensics &amp; Packet Capture (PCAP) Analysis</span>
           </h6>
-          <span className="shards-badge shards-badge-primary">PyShark &amp; Native Dissector</span>
         </div>
         <div className="shards-card-body">
           <p className="text-muted small mb-3">

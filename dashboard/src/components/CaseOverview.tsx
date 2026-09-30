@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { Row, Col, Button } from "react-bootstrap";
+import { Row, Col, Button, ProgressBar } from "react-bootstrap";
 import axios from "axios";
 import { IconRefresh, IconCheck } from "../icons";
 import { MOCK_CASES } from "../mockData";
@@ -10,6 +10,49 @@ interface CaseOverviewProps {
   caseId: string;
   fetchCases: () => void;
 }
+
+const ATTACK_CHRONOLOGY = [
+  {
+    time: "08:30:12",
+    stage: "Reconnaissance Port Scan",
+    layer: "Network Forensics",
+    severity: "MEDIUM",
+    color: "#ffb400",
+    desc: "Targeted TCP SYN sweep across internal subnet targeting SSH and RDP management ports.",
+  },
+  {
+    time: "08:45:22",
+    stage: "SSH Credential Brute Force",
+    layer: "Log Forensics",
+    severity: "HIGH",
+    color: "#fd7e14",
+    desc: "12 consecutive authentication failures from IP 192.168.1.20 targeting root and service accounts.",
+  },
+  {
+    time: "09:22:45",
+    stage: "Data Staging & Exfiltration",
+    layer: "Network PCAP",
+    severity: "CRITICAL",
+    color: "#c4183c",
+    desc: "14.2 MB compressed archive transmitted via outbound encrypted channel on TCP 4444.",
+  },
+  {
+    time: "10:00:18",
+    stage: "Ransomware Binary Execution",
+    layer: "Malware Analysis",
+    severity: "CRITICAL",
+    color: "#c4183c",
+    desc: "High-entropy (7.84/8.0) executable launched, initiating widespread file payload encryption.",
+  },
+  {
+    time: "11:00:04",
+    stage: "Anti-Forensics Wiper Invocation",
+    layer: "Filesystem Analysis",
+    severity: "HIGH",
+    color: "#fd7e14",
+    desc: "Execution of secure wiper utilities (sdelete/shred) to purge auth audit logs and shadow copies.",
+  },
+];
 
 export const CaseOverview: React.FC<CaseOverviewProps> = ({ caseId, fetchCases }) => {
   const defaultCase = MOCK_CASES.find((c) => String(c.case_id) === String(caseId)) || MOCK_CASES[0];
@@ -27,7 +70,6 @@ export const CaseOverview: React.FC<CaseOverviewProps> = ({ caseId, fetchCases }
         setDashboardData(matched);
       }
     } catch (err) {
-      // In Demo / Vercel mode, use the rich mock data
       const matched = MOCK_CASES.find((c) => String(c.case_id) === String(caseId)) || MOCK_CASES[0];
       setDashboardData(matched);
     } finally {
@@ -64,112 +106,65 @@ export const CaseOverview: React.FC<CaseOverviewProps> = ({ caseId, fetchCases }
 
   return (
     <div>
-      {/* Top Two-Column Visual Grid matching Shards Screenshot */}
+      {/* Top Two-Column Visual Grid */}
       <Row className="g-4 mb-4">
         {/* Left Column: Attack Activity & Incident Chronology Area */}
         <Col xs={12} lg={8}>
-          <div className="shards-card h-100">
+          <div className="shards-card h-100 mb-0">
             <div className="shards-card-header">
               <h6 className="shards-card-title">Incident Activity &amp; Attack Vector Chronology</h6>
-              <div className="d-flex align-items-center gap-2">
-                <span className="shards-badge shards-badge-primary">Live Triage</span>
-                <Button
-                  variant="outline-secondary"
-                  size="sm"
-                  onClick={handleRefresh}
-                  className="py-1 px-2"
-                  disabled={loading}
-                >
-                  <IconRefresh size={13} />
-                </Button>
-              </div>
+              <Button
+                variant="outline-secondary"
+                size="sm"
+                onClick={handleRefresh}
+                className="py-1 px-2"
+                disabled={loading}
+                title="Refresh Case Data"
+              >
+                <IconRefresh size={13} />
+              </Button>
             </div>
             <div className="shards-card-body">
               <p className="text-muted small mb-3">
-                Chronological aggregation of threat events detected across all six forensic layers during incident execution.
+                Chronological sequence of correlated forensic threat events identified during multi-layer examination.
               </p>
 
-              {/* Visual Timeline Waveform Graph */}
-              <div className="p-3 bg-white rounded border mb-3">
-                <div className="d-flex justify-content-between align-items-center mb-3">
-                  <div>
-                    <span className="small fw-bold text-dark d-block">Incident Attack Velocity &amp; Chronology</span>
-                    <span className="text-muted" style={{ fontSize: "0.75rem" }}>Timeline correlation from 08:30 to 11:30 incident window</span>
+              {/* Clean Structured Chronology Timeline (Never crops, 100% responsive) */}
+              <div className="d-flex flex-column gap-2 mb-4">
+                {ATTACK_CHRONOLOGY.map((item, idx) => (
+                  <div
+                    key={idx}
+                    className="p-3 bg-white rounded border d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-2"
+                    style={{ borderLeft: `4px solid ${item.color}` }}
+                  >
+                    <div style={{ flex: 1 }}>
+                      <div className="d-flex align-items-center gap-2 mb-1 flex-wrap">
+                        <span className="badge bg-light text-dark font-monospace border" style={{ fontSize: "0.75rem" }}>
+                          {item.time}
+                        </span>
+                        <strong className="text-dark small">{item.stage}</strong>
+                        <span className="text-muted small">({item.layer})</span>
+                      </div>
+                      <div className="text-secondary small" style={{ fontSize: "0.82rem" }}>
+                        {item.desc}
+                      </div>
+                    </div>
+                    <div className="text-nowrap">
+                      <span className={`shards-badge ${getSeverityBadgeClass(item.severity)}`}>
+                        {item.severity}
+                      </span>
+                    </div>
                   </div>
-                  <div className="d-flex align-items-center gap-3 small text-muted">
-                    <span className="d-flex align-items-center gap-1">
-                      <span style={{ width: 8, height: 8, backgroundColor: "#007bff", borderRadius: 2 }}></span>
-                      Threat Activity
-                    </span>
-                    <span className="d-flex align-items-center gap-1">
-                      <span style={{ width: 8, height: 8, backgroundColor: "#ced4da", borderRadius: 2 }}></span>
-                      Baseline Normal
-                    </span>
-                  </div>
-                </div>
-
-                <div style={{ width: "100%", height: "140px", overflow: "hidden" }}>
-                  <svg viewBox="0 0 700 130" width="100%" height="130">
-                    <defs>
-                      <linearGradient id="areaGradient" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#007bff" stopOpacity="0.20" />
-                        <stop offset="100%" stopColor="#007bff" stopOpacity="0.0" />
-                      </linearGradient>
-                    </defs>
-
-                    {/* Horizontal Reference Lines */}
-                    <line x1="0" y1="25" x2="700" y2="25" stroke="#f1f3f6" strokeWidth="1" strokeDasharray="3,3" />
-                    <line x1="0" y1="65" x2="700" y2="65" stroke="#f1f3f6" strokeWidth="1" strokeDasharray="3,3" />
-                    <line x1="0" y1="105" x2="700" y2="105" stroke="#f1f3f6" strokeWidth="1" strokeDasharray="3,3" />
-
-                    {/* Baseline Normal Line */}
-                    <path
-                      d="M0,110 Q100,105 200,108 T400,102 T600,106 T700,108"
-                      fill="none"
-                      stroke="#ced4da"
-                      strokeWidth="1.5"
-                      strokeDasharray="4,4"
-                    />
-
-                    {/* Incident Curve Filled Area */}
-                    <path
-                      d="M0,115 Q70,110 140,85 T280,20 T420,55 T540,18 T630,50 T700,12 L700,130 L0,130 Z"
-                      fill="url(#areaGradient)"
-                    />
-
-                    {/* Incident Line */}
-                    <path
-                      d="M0,115 Q70,110 140,85 T280,20 T420,55 T540,18 T630,50 T700,12"
-                      fill="none"
-                      stroke="#007bff"
-                      strokeWidth="2.5"
-                    />
-
-                    {/* Threat Phase Indicators */}
-                    <circle cx="140" cy="85" r="4.5" fill="#007bff" />
-                    <circle cx="280" cy="20" r="5" fill="#c4183c" />
-                    <circle cx="420" cy="55" r="4.5" fill="#ffb400" />
-                    <circle cx="540" cy="18" r="5" fill="#c4183c" />
-                    <circle cx="700" cy="12" r="4.5" fill="#17c671" />
-                  </svg>
-                </div>
-
-                <div className="d-flex justify-content-between text-muted pt-2 border-top" style={{ fontSize: "0.72rem" }}>
-                  <span>08:30 Recon Scan</span>
-                  <span>08:45 SSH Brute Force</span>
-                  <span>09:22 Exfiltration (14MB)</span>
-                  <span>10:00 Malware Execution</span>
-                  <span>11:00 Anti-Forensic Wipe</span>
-                </div>
+                ))}
               </div>
 
-              {/* Brief Case Information Block */}
+              {/* Case Scope Summary */}
               <div className="p-3 bg-light rounded border">
-                <div className="d-flex justify-content-between align-items-center mb-1">
-                  <span className="fw-bold small text-dark">Scope &amp; Incident Summary</span>
+                <div className="d-flex justify-content-between align-items-center mb-1 flex-wrap gap-2">
+                  <span className="fw-semibold small text-dark">Scope &amp; Incident Briefing</span>
                   <span className="small text-muted">Investigator: {dashboardData?.investigator || defaultCase.investigator}</span>
                 </div>
-                <div className="text-secondary small">
+                <div className="text-secondary small" style={{ fontSize: "0.82rem", lineHeight: 1.5 }}>
                   {dashboardData?.description || defaultCase.description}
                 </div>
               </div>
@@ -177,70 +172,73 @@ export const CaseOverview: React.FC<CaseOverviewProps> = ({ caseId, fetchCases }
           </div>
         </Col>
 
-        {/* Right Column: Techniques Breakdown Widget matching Shards Users by Device */}
+        {/* Right Column: Clean Responsive Severity Breakdown */}
         <Col xs={12} lg={4}>
-          <div className="shards-card h-100">
+          <div className="shards-card h-100 mb-0">
             <div className="shards-card-header">
-              <h6 className="shards-card-title">Technique Severity Distribution</h6>
+              <h6 className="shards-card-title">Threat Severity Distribution</h6>
             </div>
             <div className="shards-card-body d-flex flex-column justify-content-between">
-              {/* Donut Chart SVG */}
-              <div className="d-flex justify-content-center py-2">
-                <svg width="170" height="170" viewBox="0 0 42 42">
-                  <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#f1f3f8" strokeWidth="5"></circle>
-                  {/* Critical / High (Red) 45% */}
-                  <circle
-                    cx="21" cy="21" r="15.915" fill="transparent" stroke="#c4183c" strokeWidth="5"
-                    strokeDasharray="45 55" strokeDashoffset="25"
-                  ></circle>
-                  {/* Network / Log (Blue) 30% */}
-                  <circle
-                    cx="21" cy="21" r="15.915" fill="transparent" stroke="#007bff" strokeWidth="5"
-                    strokeDasharray="30 70" strokeDashoffset="80"
-                  ></circle>
-                  {/* Warning / Medium (Amber) 25% */}
-                  <circle
-                    cx="21" cy="21" r="15.915" fill="transparent" stroke="#ffb400" strokeWidth="5"
-                    strokeDasharray="25 75" strokeDashoffset="50"
-                  ></circle>
-                  {/* Center Text */}
-                  <text x="21" y="20" textAnchor="middle" fontSize="5" fontWeight="bold" fill="#2e384d">14</text>
-                  <text x="21" y="25" textAnchor="middle" fontSize="3" fill="#818ea3">FINDINGS</text>
-                </svg>
-              </div>
+              <div>
+                <p className="text-muted small mb-3">
+                  Proportional distribution of identified anomalies across risk classifications.
+                </p>
 
-              {/* Legend with Metrics */}
-              <div className="mt-3">
-                <div className="d-flex justify-content-between align-items-center py-1 border-bottom">
-                  <span className="small d-flex align-items-center gap-2">
-                    <span style={{ width: 8, height: 8, backgroundColor: "#c4183c", borderRadius: "50%" }}></span>
-                    Critical Severity Alerts
-                  </span>
-                  <span className="small fw-bold text-dark">45% (6)</span>
+                {/* Progress bars replacing cropped SVG donut */}
+                <div className="mb-3">
+                  <div className="d-flex justify-content-between align-items-center mb-1">
+                    <span className="small fw-semibold text-danger">Critical Severity</span>
+                    <span className="small text-muted">6 findings (43%)</span>
+                  </div>
+                  <ProgressBar variant="danger" now={43} style={{ height: "7px" }} />
                 </div>
-                <div className="d-flex justify-content-between align-items-center py-1 border-bottom">
-                  <span className="small d-flex align-items-center gap-2">
-                    <span style={{ width: 8, height: 8, backgroundColor: "#007bff", borderRadius: "50%" }}></span>
-                    High Confidence Detections
-                  </span>
-                  <span className="small fw-bold text-dark">30% (5)</span>
+
+                <div className="mb-3">
+                  <div className="d-flex justify-content-between align-items-center mb-1">
+                    <span className="small fw-semibold text-warning">High Severity</span>
+                    <span className="small text-muted">5 findings (36%)</span>
+                  </div>
+                  <ProgressBar variant="warning" now={36} style={{ height: "7px" }} />
                 </div>
-                <div className="d-flex justify-content-between align-items-center py-1">
-                  <span className="small d-flex align-items-center gap-2">
-                    <span style={{ width: 8, height: 8, backgroundColor: "#ffb400", borderRadius: "50%" }}></span>
-                    Medium / Informational
-                  </span>
-                  <span className="small fw-bold text-dark">25% (3)</span>
+
+                <div className="mb-4">
+                  <div className="d-flex justify-content-between align-items-center mb-1">
+                    <span className="small fw-semibold text-primary">Medium / Informational</span>
+                    <span className="small text-muted">3 findings (21%)</span>
+                  </div>
+                  <ProgressBar variant="primary" now={21} style={{ height: "7px" }} />
+                </div>
+
+                <hr className="my-3 text-muted" />
+
+                <div className="small fw-semibold text-dark mb-2">Forensic Vector Coverage</div>
+                <div className="d-flex flex-column gap-2">
+                  <div className="d-flex justify-content-between small text-secondary py-1 border-bottom">
+                    <span>Authentication &amp; System Logs</span>
+                    <span className="fw-semibold text-dark">4 Events</span>
+                  </div>
+                  <div className="d-flex justify-content-between small text-secondary py-1 border-bottom">
+                    <span>Network PCAP Flows</span>
+                    <span className="fw-semibold text-dark">3 Events</span>
+                  </div>
+                  <div className="d-flex justify-content-between small text-secondary py-1 border-bottom">
+                    <span>Malware Static &amp; Entropy</span>
+                    <span className="fw-semibold text-dark">3 Events</span>
+                  </div>
+                  <div className="d-flex justify-content-between small text-secondary py-1">
+                    <span>Anti-Forensics &amp; Wiper Traces</span>
+                    <span className="fw-semibold text-dark">4 Events</span>
+                  </div>
                 </div>
               </div>
 
               {/* Integrity status pill */}
-              <div className="p-2 mt-3 rounded bg-light border d-flex align-items-center justify-content-between">
+              <div className="p-2 mt-4 rounded bg-light border d-flex align-items-center justify-content-between">
                 <span className="small text-muted d-flex align-items-center gap-1">
                   <IconCheck size={14} color="#17c671" />
-                  <span>Chain of Custody</span>
+                  <span>Evidence Integrity</span>
                 </span>
-                <span className="shards-badge shards-badge-success">Intact</span>
+                <span className="small fw-semibold text-success">Verified SHA-256</span>
               </div>
             </div>
           </div>

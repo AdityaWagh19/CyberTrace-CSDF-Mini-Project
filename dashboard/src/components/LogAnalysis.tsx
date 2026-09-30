@@ -111,7 +111,6 @@ export const LogAnalysis: React.FC<LogAnalysisProps> = ({ caseId }) => {
             <IconLogs size={16} />
             <span>Technique 1: Authentication &amp; System Log Forensics</span>
           </h6>
-          <span className="shards-badge shards-badge-primary">MITRE T1110 (Brute Force)</span>
         </div>
         <div className="shards-card-body">
           <p className="text-muted small mb-3">

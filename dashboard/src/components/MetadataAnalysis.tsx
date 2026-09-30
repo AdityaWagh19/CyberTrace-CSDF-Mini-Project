@@ -128,7 +128,6 @@ export const MetadataAnalysis: React.FC<MetadataAnalysisProps> = ({ caseId }) =>
             <IconMetadata size={16} />
             <span>Technique 4: Document, Image &amp; Filesystem Metadata Forensics</span>
           </h6>
-          <span className="shards-badge shards-badge-primary">PDF &amp; EXIF Analysis</span>
         </div>
         <div className="shards-card-body">
           <p className="text-muted small mb-3">

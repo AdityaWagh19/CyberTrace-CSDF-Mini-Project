@@ -4,7 +4,6 @@ import {
   Modal,
   Button,
   Form,
-  Badge,
 } from "react-bootstrap";
 import "./shards-theme.css";
 
@@ -20,11 +19,7 @@ import {
   IconCiaTriad,
   IconReport,
   IconSearch,
-  IconBell,
   IconPlus,
-  IconRefresh,
-  IconArrowUp,
-  IconLock,
 } from "./icons";
 
 import { CaseOverview } from "./components/CaseOverview";
@@ -75,15 +70,6 @@ function App() {
   useEffect(() => {
     fetchCases();
   }, [fetchCases]);
-
-  const toggleDemoMode = () => {
-    if (isDemoMode) {
-      fetchCases();
-    } else {
-      setIsDemoMode(true);
-      setCases(MOCK_CASES);
-    }
-  };
 
   const handleCreateCase = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -199,18 +185,6 @@ function App() {
             </div>
           ))}
         </div>
-
-        <div className="shards-sidebar-footer">
-          <div className="d-flex align-items-center justify-content-between text-muted small">
-            <span className="d-flex align-items-center gap-1">
-              <IconLock size={13} />
-              <span>Custody: SHA-256</span>
-            </span>
-            <Badge bg={isDemoMode ? "warning" : "success"} text={isDemoMode ? "dark" : "white"}>
-              {isDemoMode ? "Live Demo" : "Connected"}
-            </Badge>
-          </div>
-        </div>
       </aside>
 
       {/* Main Content Area */}
@@ -229,20 +203,6 @@ function App() {
           </div>
 
           <div className="shards-navbar-right">
-            {/* Live Demo Switch */}
-            <div className="d-flex align-items-center gap-2">
-              <span className="pulse-indicator"></span>
-              <button
-                onClick={toggleDemoMode}
-                className="btn btn-sm btn-outline-secondary py-1 px-2 d-flex align-items-center gap-1"
-                style={{ fontSize: "0.75rem", fontWeight: 600 }}
-                title="Toggle between client-side simulation (Vercel) and local backend API"
-              >
-                <span>{isDemoMode ? "Demo Mode: Active" : "Backend: Online"}</span>
-                <IconRefresh size={12} />
-              </button>
-            </div>
-
             {/* Case Selector Dropdown */}
             <Form.Select
               size="sm"
@@ -269,17 +229,6 @@ function App() {
               <span>New Case</span>
             </Button>
 
-            {/* Notification Bell */}
-            <div className="position-relative p-1 text-muted" style={{ cursor: "pointer" }} title="Security Threat Alerts">
-              <IconBell size={18} color="#5a6169" />
-              <span
-                className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-                style={{ fontSize: "0.6rem" }}
-              >
-                3
-              </span>
-            </div>
-
             {/* User Profile Chip */}
             <div className="shards-user-chip">
               <div className="shards-user-avatar">JD</div>
@@ -297,97 +246,43 @@ function App() {
 
         {/* Content Container */}
         <main className="shards-content">
-          {/* Page Title & Breadcrumb Header */}
-          <div className="shards-page-header d-flex flex-wrap align-items-center justify-content-between gap-3">
+          {/* Page Title Header */}
+          <div className="shards-page-header d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
             <div>
-              <div className="shards-page-category">Cyber Crime Forensic Investigation</div>
-              <h1 className="shards-page-title d-flex align-items-center gap-2">
-                <span>{currentCase.case_name}</span>
-                <span className="shards-badge shards-badge-success">{currentCase.status}</span>
-                <span className={`shards-badge ${currentCase.risk_score >= 8.0 ? "shards-badge-danger" : "shards-badge-warning"}`}>
-                  Risk Score: {currentCase.risk_score} / 10
-                </span>
-              </h1>
+              <div className="shards-page-category">Investigation Dossier</div>
+              <h1 className="shards-page-title">{currentCase.case_name}</h1>
             </div>
-
-            <div className="d-flex align-items-center gap-2">
-              <Button
-                variant="outline-secondary"
-                size="sm"
-                onClick={() => setActiveTab("report")}
-                className="d-flex align-items-center gap-1"
-                style={{ fontSize: "0.8rem", fontWeight: 600 }}
-              >
-                <IconReport size={14} />
-                <span>Export Dossier</span>
-              </Button>
+            <div className="d-flex align-items-center gap-3 text-muted small">
+              <span>Status: <strong className="text-success">{currentCase.status}</strong></span>
+              <span>Investigator: <strong className="text-dark">John Doe</strong></span>
             </div>
           </div>
 
-          {/* Streamlined Executive KPI Row (Only on Overview to keep UI uncluttered) */}
+          {/* Streamlined Executive KPI Row (Only on Overview) */}
           {activeTab === "case-overview" && (
             <div className="shards-stats-row mb-4">
-              {/* Card 1: Evidence Items */}
-              <div className="shards-stat-card">
-                <div>
-                  <div className="shards-stat-label">Total Evidence Items</div>
-                  <div className="shards-stat-value">{currentCase.evidence_count || 8}</div>
-                  <div className="shards-stat-change positive">
-                    <IconArrowUp size={12} />
-                    <span>100% Hash Verified</span>
-                  </div>
-                </div>
-                <svg className="shards-stat-sparkline" viewBox="0 0 200 35" preserveAspectRatio="none">
-                  <path d="M0,25 Q30,10 60,20 T120,8 T160,22 T200,10" fill="none" stroke="#007bff" strokeWidth="2" />
-                  <path d="M0,25 Q30,10 60,20 T120,8 T160,22 T200,10 V35 H0 Z" fill="rgba(0,123,255,0.06)" />
-                </svg>
+              <div className="shards-stat-card" style={{ borderTop: "3px solid #007bff" }}>
+                <div className="shards-stat-label">Total Evidence Items</div>
+                <div className="shards-stat-value">{currentCase.evidence_count || 8}</div>
+                <div className="text-muted small">Cryptographically Verified</div>
               </div>
 
-              {/* Card 2: Suspicious Findings */}
-              <div className="shards-stat-card">
-                <div>
-                  <div className="shards-stat-label">Suspicious Findings</div>
-                  <div className="shards-stat-value">{currentCase.findings_count || 14}</div>
-                  <div className="shards-stat-change negative">
-                    <IconArrowUp size={12} />
-                    <span>Multi-Vector Threats</span>
-                  </div>
-                </div>
-                <svg className="shards-stat-sparkline" viewBox="0 0 200 35" preserveAspectRatio="none">
-                  <path d="M0,28 Q35,15 70,25 T130,5 T170,20 T200,12" fill="none" stroke="#c4183c" strokeWidth="2" />
-                  <path d="M0,28 Q35,15 70,25 T130,5 T170,20 T200,12 V35 H0 Z" fill="rgba(196,24,60,0.06)" />
-                </svg>
+              <div className="shards-stat-card" style={{ borderTop: "3px solid #c4183c" }}>
+                <div className="shards-stat-label">Detected Findings</div>
+                <div className="shards-stat-value text-danger">{currentCase.findings_count || 14}</div>
+                <div className="text-muted small">Multi-Source Anomalies</div>
               </div>
 
-              {/* Card 3: Overall Risk */}
-              <div className="shards-stat-card">
-                <div>
-                  <div className="shards-stat-label">Investigation Risk</div>
-                  <div className="shards-stat-value">{currentCase.risk_score || 8.5} <span style={{ fontSize: "0.85rem", color: "#818ea3" }}>/ 10</span></div>
-                  <div className="shards-stat-change negative">
-                    <span>Critical Risk Tier</span>
-                  </div>
-                </div>
-                <svg className="shards-stat-sparkline" viewBox="0 0 200 35" preserveAspectRatio="none">
-                  <path d="M0,22 Q35,10 70,20 T130,8 T170,18 T200,6" fill="none" stroke="#ffb400" strokeWidth="2" />
-                  <path d="M0,22 Q35,10 70,20 T130,8 T170,18 T200,6 V35 H0 Z" fill="rgba(255,180,0,0.06)" />
-                </svg>
+              <div className="shards-stat-card" style={{ borderTop: "3px solid #ffb400" }}>
+                <div className="shards-stat-label">Overall Case Risk</div>
+                <div className="shards-stat-value text-dark">{currentCase.risk_score || 8.5} <span className="fs-6 text-muted">/ 10</span></div>
+                <div className="text-muted small">Critical Severity Tier</div>
               </div>
 
-              {/* Card 4: CIA Benchmark */}
-              <div className="shards-stat-card">
-                <div>
-                  <div className="shards-stat-label">CIA Benchmark Score</div>
-                  <div className="shards-stat-value">134 <span style={{ fontSize: "0.85rem", color: "#818ea3" }}>/ 180</span></div>
-                  <div className="shards-stat-change positive">
-                    <IconArrowUp size={12} />
-                    <span>6 Active Pipelines</span>
-                  </div>
-                </div>
-                <svg className="shards-stat-sparkline" viewBox="0 0 200 35" preserveAspectRatio="none">
-                  <path d="M0,26 Q30,14 65,22 T125,10 T165,16 T200,6" fill="none" stroke="#17c671" strokeWidth="2" />
-                  <path d="M0,26 Q30,14 65,22 T125,10 T165,16 T200,6 V35 H0 Z" fill="rgba(23,198,113,0.06)" />
-                </svg>
+              <div className="shards-stat-card" style={{ borderTop: "3px solid #17c671" }}>
+                <div className="shards-stat-label">CIA Benchmark Score</div>
+                <div className="shards-stat-value text-success">134 <span className="fs-6 text-muted">/ 180</span></div>
+                <div className="text-muted small">6 Active Pipelines</div>
               </div>
             </div>
           )}

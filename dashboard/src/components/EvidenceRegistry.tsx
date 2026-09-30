@@ -115,7 +115,6 @@ export const EvidenceRegistry: React.FC<EvidenceRegistryProps> = ({ caseId }) =>
             <IconEvidence size={16} />
             <span>Digital Evidence Acquisition &amp; Custody Intake</span>
           </h6>
-          <span className="shards-badge shards-badge-primary">NIST SP 800-86 Compliant</span>
         </div>
         <div className="shards-card-body">
           <p className="text-muted small mb-3">
