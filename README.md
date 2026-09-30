@@ -78,44 +78,9 @@ Each forensic pipeline is quantitatively evaluated on a standardized 1–10 scal
 
 ```mermaid
 graph TD
-    subgraph UI ["Presentation Layer (React 19 / TypeScript)"]
-        A["Shards Dashboard Interface"]
-        B["Dynamic Plotly Radar & Bar Charts"]
-        C["Client-Side Web Crypto SHA-256"]
-        D["Interactive Live Demo Engine"]
-        E["Automated PDF Report Generator"]
-    end
-
-    subgraph API ["Application & Correlation Layer"]
-        F["FastAPI REST & Serverless Endpoints"]
-        G["Cross-Source Correlation Engine"]
-        H["Risk Severity Aggregator"]
-        I["CIA Triad Benchmark Evaluator"]
-    end
-
-    subgraph Engines ["Forensic Analysis Pipelines"]
-        J["Authentication & Log Forensics"]
-        K["Network PCAP Packet Inspector"]
-        L["Shannon Entropy & Malware Scanner"]
-        M["Document Metadata & Timestomp Audit"]
-        N["Anti-Forensics & Deletion Reconstructor"]
-    end
-
-    subgraph Crypto ["Cryptographic Subsystem"]
-        O["SHA-256 & MD5 Verification Engine"]
-        P["Chain of Custody Integrity Ledger"]
-        Q["Secure Wiper Signature Detector"]
-    end
-
-    subgraph Storage ["Evidence & Data Storage"]
-        R["SQLite Evidence Database"]
-        S["Virtual /tmp Evidence Directory"]
-        T["Embedded Multi-Case Datasets"]
-    end
-
-    UI -->|"REST API / Web Crypto"| API
-    API --> Engines
-    API --> Crypto
-    API --> Storage
+    A["Evidence Ingestion (PCAP, Logs, Files, Memory)"] --> B["Forensic Analysis Pipelines (6 Modules)"]
+    B --> C["Cross-Source Correlation Engine"]
+    C --> D["CIA Triad Matrix & Risk Scoring"]
+    D --> E["Interactive Investigation Dashboard & PDF Reports"]
 ```
 

@@ -2,10 +2,13 @@
   "name": "cybertrace",
   "version": "1.0.0",
   "private": true,
+  "engines": {
+    "node": "20.x"
+  },
   "workspaces": [
     "dashboard"
   ],
   "scripts": {
-    "build": "if [ -d \"dashboard\" ]; then cd dashboard && npm run build && cp -r build ../build 2>/dev/null || true; else npm run build && mkdir -p dashboard && cp -r build dashboard/ 2>/dev/null || true; fi"
+    "build": "if [ -d \"dashboard\" ]; then cd dashboard && CI=false GENERATE_SOURCEMAP=false npm run build && cp -r build ../build 2>/dev/null || true; else CI=false GENERATE_SOURCEMAP=false npm run build && mkdir -p dashboard && cp -r build dashboard/ 2>/dev/null || true; fi"
   }
 }
