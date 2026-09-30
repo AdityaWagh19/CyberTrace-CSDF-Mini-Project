@@ -52,23 +52,25 @@ function App() {
   const [isDemoMode, setIsDemoMode] = useState<boolean>(true);
   const [searchQuery, setSearchQuery] = useState<string>("");
 
-  const currentCase = cases.find((c) => String(c.case_id) === String(caseId)) || cases[0] || MOCK_CASES[0];
+  const safeCases = Array.isArray(cases) && cases.length > 0 ? cases : MOCK_CASES;
+  const currentCase = safeCases.find((c) => String(c.case_id) === String(caseId)) || safeCases[0] || MOCK_CASES[0];
 
   const fetchCases = useCallback(async () => {
     try {
       const res = await axios.get(`${API_BASE}/api/cases/`, { timeout: 2500 });
-      if (res.data && res.data.length > 0) {
+      if (Array.isArray(res.data) && res.data.length > 0 && typeof res.data[0] === "object") {
         setCases(res.data);
         setIsDemoMode(false);
+      } else {
+        setCases(MOCK_CASES);
+        setIsDemoMode(true);
       }
     } catch (err) {
       // Fallback gracefully to Live Demo mode
       setIsDemoMode(true);
-      if (cases.length === 0) {
-        setCases(MOCK_CASES);
-      }
+      setCases(MOCK_CASES);
     }
-  }, [cases.length]);
+  }, []);
 
   useEffect(() => {
     fetchCases();
@@ -248,7 +250,7 @@ function App() {
               onChange={(e) => setCaseId(e.target.value)}
               style={{ width: "230px", fontSize: "0.82rem", fontWeight: 600 }}
             >
-              {cases.map((c) => (
+              {safeCases.map((c) => (
                 <option key={c.case_id} value={String(c.case_id)}>
                   Case #{c.case_id}: {c.case_name?.substring(0, 22)}...
                 </option>

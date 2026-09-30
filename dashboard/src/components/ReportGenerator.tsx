@@ -22,8 +22,11 @@ export const ReportGenerator: React.FC<ReportGeneratorProps> = ({ caseId }) => {
     const loadReportData = async () => {
       try {
         const res = await axios.get(`${API_BASE}/api/dashboard/${caseId}`, { timeout: 2500 });
-        if (res.data) {
+        if (res.data && typeof res.data === "object" && !Array.isArray(res.data) && res.data.case_name) {
           setReportData(res.data);
+        } else {
+          const matched = MOCK_CASES.find((c) => String(c.case_id) === String(caseId)) || MOCK_CASES[0];
+          setReportData(matched);
         }
       } catch (err) {
         const matched = MOCK_CASES.find((c) => String(c.case_id) === String(caseId)) || MOCK_CASES[0];

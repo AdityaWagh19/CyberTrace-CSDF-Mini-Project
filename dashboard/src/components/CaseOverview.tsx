@@ -20,8 +20,11 @@ export const CaseOverview: React.FC<CaseOverviewProps> = ({ caseId, fetchCases }
     setLoading(true);
     try {
       const res = await axios.get(`${API_BASE}/api/dashboard/${caseId}`, { timeout: 2500 });
-      if (res.data) {
+      if (res.data && typeof res.data === "object" && !Array.isArray(res.data) && res.data.case_name) {
         setDashboardData(res.data);
+      } else {
+        const matched = MOCK_CASES.find((c) => String(c.case_id) === String(caseId)) || MOCK_CASES[0];
+        setDashboardData(matched);
       }
     } catch (err) {
       // In Demo / Vercel mode, use the rich mock data
