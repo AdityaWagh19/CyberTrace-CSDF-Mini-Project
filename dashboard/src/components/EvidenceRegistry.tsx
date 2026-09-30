@@ -4,7 +4,7 @@ import axios from "axios";
 import { IconEvidence, IconLock, IconCheck, IconPlus } from "../icons";
 import { MOCK_CASES } from "../mockData";
 
-const API_BASE = process.env.REACT_APP_API_URL || "http://localhost:8000";
+import { API_BASE } from "../apiConfig";
 
 interface EvidenceRegistryProps {
   caseId: string;

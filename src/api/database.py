@@ -11,10 +11,25 @@ SRC_DIR = API_DIR.parent
 PROJECT_ROOT = SRC_DIR.parent
 
 # Primary evidence directory in project root, with fallback
-EVIDENCE_DIR = PROJECT_ROOT / "evidence"
-EVIDENCE_DIR.mkdir(parents=True, exist_ok=True)
+if os.environ.get("VERCEL"):
+    DB_PATH = Path("/tmp/evidence.db")
+    EVIDENCE_DIR = Path("/tmp/evidence")
+    EVIDENCE_DIR.mkdir(parents=True, exist_ok=True)
+    orig_evidence = PROJECT_ROOT / "evidence"
+    if orig_evidence.exists():
+        import shutil
+        for item in orig_evidence.iterdir():
+            target = EVIDENCE_DIR / item.name
+            if not target.exists() and item.is_file():
+                try:
+                    shutil.copy2(item, target)
+                except Exception:
+                    pass
+else:
+    EVIDENCE_DIR = PROJECT_ROOT / "evidence"
+    EVIDENCE_DIR.mkdir(parents=True, exist_ok=True)
+    DB_PATH = PROJECT_ROOT / "evidence.db"
 
-DB_PATH = PROJECT_ROOT / "evidence.db"
 
 DEFAULT_CIA_SCORES = [
     ("Log Forensics", 8, 8, 7, "Detects unauthorized access and event timelines"),

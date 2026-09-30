@@ -3,7 +3,7 @@ import { Button, Form, Row, Col, Alert } from "react-bootstrap";
 import axios from "axios";
 import { IconNetwork, IconCheck, IconArrowUp } from "../icons";
 
-const API_BASE = process.env.REACT_APP_API_URL || "http://localhost:8000";
+import { API_BASE } from "../apiConfig";
 
 interface NetworkAnalysisProps {
   caseId: string;

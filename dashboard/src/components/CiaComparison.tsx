@@ -3,6 +3,7 @@ import { Row, Col, Alert } from "react-bootstrap";
 import axios from "axios";
 import createPlotlyComponent from "react-plotly.js/factory";
 import { IconCiaTriad, IconCheck } from "../icons";
+import { API_BASE } from "../apiConfig";
 
 let cachedPlot: any = null;
 const getPlotComponent = () => {
@@ -14,8 +15,6 @@ const getPlotComponent = () => {
   }
   return null;
 };
-
-const API_BASE = process.env.REACT_APP_API_URL || "http://localhost:8000";
 
 interface CiaComparisonProps {
   caseId: string;
