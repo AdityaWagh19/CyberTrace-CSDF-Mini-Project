@@ -44,3 +44,4 @@ build/
 # OS generated
 .DS_Store
 Thumbs.db
+Screenshot*.png

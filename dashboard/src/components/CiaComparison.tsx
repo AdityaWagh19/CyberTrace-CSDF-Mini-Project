@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { Card, Table, Badge, Row, Col, Alert } from "react-bootstrap";
+import { Row, Col, Alert } from "react-bootstrap";
 import axios from "axios";
 import createPlotlyComponent from "react-plotly.js/factory";
+import { IconCiaTriad, IconCheck } from "../icons";
 
 let cachedPlot: any = null;
 const getPlotComponent = () => {
@@ -31,7 +32,7 @@ const DEFAULT_SCORES = [
 
 export const CiaComparison: React.FC<CiaComparisonProps> = ({ caseId }) => {
   const [PlotComponent, setPlotComponent] = useState<any>(() => getPlotComponent());
-  const [techniqueScores, setTechniqueScores] = useState<any[]>([]);
+  const [techniqueScores, setTechniqueScores] = useState<any[]>(DEFAULT_SCORES);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   useEffect(() => {
@@ -50,11 +51,10 @@ export const CiaComparison: React.FC<CiaComparisonProps> = ({ caseId }) => {
   const fetchCiaData = useCallback(async () => {
     setErrorMsg(null);
     try {
-      const res = await axios.get(`${API_BASE}/api/dashboard/${caseId}`);
+      const res = await axios.get(`${API_BASE}/api/dashboard/${caseId}`, { timeout: 2500 });
       const scores = res.data?.cia_scores?.length > 0 ? res.data.cia_scores : DEFAULT_SCORES;
       setTechniqueScores(scores);
     } catch (err: any) {
-      console.error("Failed to fetch CIA data, using default matrix:", err);
       setTechniqueScores(DEFAULT_SCORES);
     }
   }, [caseId]);
@@ -76,7 +76,6 @@ export const CiaComparison: React.FC<CiaComparisonProps> = ({ caseId }) => {
     return "Weak contribution";
   };
 
-  // Grouped Bar Chart Traces
   const generateBarData = () => {
     const techniques = techniqueScores.map((s) => s.technique);
     const conf = techniqueScores.map((s) => s.confidentiality);
@@ -85,22 +84,23 @@ export const CiaComparison: React.FC<CiaComparisonProps> = ({ caseId }) => {
 
     return {
       data: [
-        { x: techniques, y: conf, name: "Confidentiality", type: "bar" as const, marker: { color: "#0d6efd" } },
-        { x: techniques, y: integ, name: "Integrity", type: "bar" as const, marker: { color: "#198754" } },
-        { x: techniques, y: avail, name: "Availability", type: "bar" as const, marker: { color: "#ffc107" } },
+        { x: techniques, y: conf, name: "Confidentiality", type: "bar" as const, marker: { color: "#007bff" } },
+        { x: techniques, y: integ, name: "Integrity", type: "bar" as const, marker: { color: "#17c671" } },
+        { x: techniques, y: avail, name: "Availability", type: "bar" as const, marker: { color: "#ffb400" } },
       ],
       layout: {
         barmode: "group" as const,
-        title: { text: "Forensic Technique Comparison across CIA Triad" },
-        yaxis: { title: { text: "Score (1-10)" }, range: [0, 11], dtick: 2 },
+        title: { text: "Forensic Technique Comparison Across CIA Triad" },
+        yaxis: { title: { text: "Score (1-10 Scale)" }, range: [0, 11], dtick: 2 },
         xaxis: { tickangle: -15 },
         margin: { b: 80, l: 50, r: 20, t: 50 },
         autosize: true,
+        plot_bgcolor: "#fafbfe",
+        paper_bgcolor: "#ffffff",
       },
     };
   };
 
-  // Radar / Spider Chart Traces
   const generateRadarData = () => {
     const techniques = techniqueScores.map((s) => s.technique);
     const conf = techniqueScores.map((s) => s.confidentiality);
@@ -115,7 +115,7 @@ export const CiaComparison: React.FC<CiaComparisonProps> = ({ caseId }) => {
           theta: [...techniques, techniques[0]],
           fill: "toself" as const,
           name: "Confidentiality",
-          line: { color: "#0d6efd" },
+          line: { color: "#007bff" },
         },
         {
           type: "scatterpolar" as const,
@@ -123,7 +123,7 @@ export const CiaComparison: React.FC<CiaComparisonProps> = ({ caseId }) => {
           theta: [...techniques, techniques[0]],
           fill: "toself" as const,
           name: "Integrity",
-          line: { color: "#198754" },
+          line: { color: "#17c671" },
         },
         {
           type: "scatterpolar" as const,
@@ -131,16 +131,18 @@ export const CiaComparison: React.FC<CiaComparisonProps> = ({ caseId }) => {
           theta: [...techniques, techniques[0]],
           fill: "toself" as const,
           name: "Availability",
-          line: { color: "#ffc107" },
+          line: { color: "#ffb400" },
         },
       ],
       layout: {
         polar: {
           radialaxis: { visible: true, range: [0, 10] },
+          bgcolor: "#fafbfe",
         },
         title: { text: "CIA Triad Radar Analysis" },
         margin: { b: 50, l: 50, r: 50, t: 50 },
         autosize: true,
+        paper_bgcolor: "#ffffff",
       },
     };
   };
@@ -149,32 +151,42 @@ export const CiaComparison: React.FC<CiaComparisonProps> = ({ caseId }) => {
   const radarChart = generateRadarData();
 
   return (
-    <Card className="shadow-sm border-0 mb-4">
-      <Card.Header className="bg-primary text-white py-3">
-        <h5 className="mb-0">Technique Comparison: CIA Triad Evaluation Matrix</h5>
-      </Card.Header>
-      <Card.Body className="p-4">
-        <p className="text-muted">
-          Evaluates and benchmarks all six cyber forensic techniques against the CIA triad
-          (Confidentiality, Integrity, and Availability) on a standardized 1–10 scale.
-        </p>
+    <div>
+      {/* Module Overview Card */}
+      <div className="shards-card mb-4">
+        <div className="shards-card-header">
+          <h6 className="shards-card-title d-flex align-items-center gap-2">
+            <IconCiaTriad size={16} />
+            <span>Technique Evaluation: CIA Triad Matrix &amp; Comparative Benchmark</span>
+          </h6>
+          <span className="shards-badge shards-badge-primary">Standardized 1-10 Scale</span>
+        </div>
+        <div className="shards-card-body">
+          <p className="text-muted small mb-0">
+            Systematic benchmark evaluating all six digital forensic techniques against the fundamental security triad:
+            Confidentiality (privacy and secrecy), Integrity (tamper resistance and authenticity), and Availability (continuity and access).
+          </p>
+          {errorMsg && <Alert variant="warning" className="mt-3 py-2 px-3 small">{errorMsg}</Alert>}
+        </div>
+      </div>
 
-        {errorMsg && <Alert variant="warning">{errorMsg}</Alert>}
-
-        <Card className="border mb-4">
-          <Card.Header className="bg-dark text-white fw-bold">
-            CIA Evaluation Matrix (1–10 Scale)
-          </Card.Header>
-          <Card.Body className="p-0">
-            <Table responsive striped bordered hover className="align-middle mb-0">
-              <thead className="table-light">
+      {/* Evaluation Matrix Table */}
+      <div className="shards-card mb-4">
+        <div className="shards-card-header">
+          <h6 className="shards-card-title">CIA Evaluation Matrix &amp; Technique Contributions</h6>
+          <span className="shards-badge shards-badge-success">Triad Benchmark: 134 / 180</span>
+        </div>
+        <div className="p-0">
+          <div className="table-responsive">
+            <table className="shards-table">
+              <thead>
                 <tr>
                   <th>Forensic Technique</th>
-                  <th className="text-center text-primary">Confidentiality</th>
-                  <th className="text-center text-success">Integrity</th>
-                  <th className="text-center text-warning">Availability</th>
-                  <th className="text-center fw-bold">Total Score</th>
-                  <th>Contribution Assessment</th>
+                  <th className="text-center" style={{ width: "140px" }}>Confidentiality</th>
+                  <th className="text-center" style={{ width: "120px" }}>Integrity</th>
+                  <th className="text-center" style={{ width: "120px" }}>Availability</th>
+                  <th className="text-center" style={{ width: "130px" }}>Total Score</th>
+                  <th>Contribution Assessment &amp; Justification</th>
                 </tr>
               </thead>
               <tbody>
@@ -182,61 +194,89 @@ export const CiaComparison: React.FC<CiaComparisonProps> = ({ caseId }) => {
                   const total = getTotal(s);
                   return (
                     <tr key={idx}>
-                      <td className="fw-bold">{s.technique}</td>
-                      <td className="text-center"><Badge bg="primary">{s.confidentiality}/10</Badge></td>
-                      <td className="text-center"><Badge bg="success">{s.integrity}/10</Badge></td>
-                      <td className="text-center"><Badge bg="warning" text="dark">{s.availability}/10</Badge></td>
-                      <td className="text-center fw-bold fs-6">{total} / 30</td>
+                      <td className="fw-bold text-dark">{s.technique}</td>
+                      <td className="text-center">
+                        <span className="shards-badge shards-badge-primary">{s.confidentiality} / 10</span>
+                      </td>
+                      <td className="text-center">
+                        <span className="shards-badge shards-badge-success">{s.integrity} / 10</span>
+                      </td>
+                      <td className="text-center">
+                        <span className="shards-badge shards-badge-warning">{s.availability} / 10</span>
+                      </td>
+                      <td className="text-center fw-bold">
+                        <span className="fs-6 text-dark">{total}</span>
+                        <span className="small text-muted"> / 30</span>
+                      </td>
                       <td>
-                        <span className="small text-muted d-block">{s.justification}</span>
-                        <Badge bg={total >= 23 ? "success" : total >= 20 ? "primary" : "secondary"}>
+                        <div className="small text-secondary mb-1">{s.justification}</div>
+                        <span className={`shards-badge ${total >= 23 ? "shards-badge-success" : total >= 20 ? "shards-badge-primary" : "shards-badge-dark"}`}>
                           {getInterpretation(total)}
-                        </Badge>
+                        </span>
                       </td>
                     </tr>
                   );
                 })}
               </tbody>
-            </Table>
-          </Card.Body>
-        </Card>
+            </table>
+          </div>
+        </div>
+      </div>
 
-        {/* Charts Row */}
-        <Row className="g-4 mb-4">
-          <Col xs={12} lg={6}>
-            <Card className="border h-100 p-2">
+      {/* Visual Charts Row */}
+      <Row className="g-4 mb-4">
+        <Col xs={12} lg={6}>
+          <div className="shards-card h-100">
+            <div className="shards-card-header">
+              <h6 className="shards-card-title">Grouped Bar Matrix Analysis</h6>
+              <span className="small text-muted d-flex align-items-center gap-1">
+                <IconCheck size={12} color="#17c671" />
+                <span>Interactive Plot</span>
+              </span>
+            </div>
+            <div className="shards-card-body p-2">
               {PlotComponent ? (
                 <PlotComponent
                   data={barChart.data as any}
                   layout={barChart.layout as any}
                   useResizeHandler={true}
-                  style={{ width: "100%", height: "400px" }}
+                  style={{ width: "100%", height: "380px" }}
                 />
               ) : (
-                <div className="d-flex align-items-center justify-content-center" style={{ height: "400px" }}>
-                  <span className="text-muted">Loading visualization engine...</span>
+                <div className="d-flex align-items-center justify-content-center" style={{ height: "380px" }}>
+                  <span className="text-muted small">Loading chart engine...</span>
                 </div>
               )}
-            </Card>
-          </Col>
-          <Col xs={12} lg={6}>
-            <Card className="border h-100 p-2">
+            </div>
+          </div>
+        </Col>
+
+        <Col xs={12} lg={6}>
+          <div className="shards-card h-100">
+            <div className="shards-card-header">
+              <h6 className="shards-card-title">Polar Radar Triad Projection</h6>
+              <span className="small text-muted d-flex align-items-center gap-1">
+                <IconCheck size={12} color="#17c671" />
+                <span>Polar Axis</span>
+              </span>
+            </div>
+            <div className="shards-card-body p-2">
               {PlotComponent ? (
                 <PlotComponent
                   data={radarChart.data as any}
                   layout={radarChart.layout as any}
                   useResizeHandler={true}
-                  style={{ width: "100%", height: "400px" }}
+                  style={{ width: "100%", height: "380px" }}
                 />
               ) : (
-                <div className="d-flex align-items-center justify-content-center" style={{ height: "400px" }}>
-                  <span className="text-muted">Loading visualization engine...</span>
+                <div className="d-flex align-items-center justify-content-center" style={{ height: "380px" }}>
+                  <span className="text-muted small">Loading chart engine...</span>
                 </div>
               )}
-            </Card>
-          </Col>
-        </Row>
-      </Card.Body>
-    </Card>
+            </div>
+          </div>
+        </Col>
+      </Row>
+    </div>
   );
 };

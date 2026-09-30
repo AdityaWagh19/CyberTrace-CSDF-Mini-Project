@@ -1,0 +1,11 @@
+{
+  "buildCommand": "cd dashboard && npm run build",
+  "outputDirectory": "dashboard/build",
+  "framework": "create-react-app",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}

@@ -1,183 +1,227 @@
-# CyberTrace: Cyber Crime Investigation & Forensic Analysis System
+# CyberTrace: Digital Forensics & Incident Response Platform
 
 [![Test Suite](https://img.shields.io/badge/pytest-9%20passed-brightgreen.svg)]()
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.100%2B-009688.svg?logo=fastapi&logoColor=white)]()
 [![React](https://img.shields.io/badge/React-19.x-61DAFB.svg?logo=react&logoColor=black)]()
 [![TypeScript](https://img.shields.io/badge/TypeScript-4.9%2B-blue.svg?logo=typescript&logoColor=white)]()
-[![License](https://img.shields.io/badge/License-MIT-yellow.svg)]()
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)]()
 
-> A unified digital forensics investigation system and interactive web dashboard implementing six cyber forensic techniques, CIA Triad scoring matrix, automated suspicious event correlation, and multi-format evidence reporting.
+CyberTrace is a digital forensics investigation and incident response (DFIR) platform engineered with six forensic analysis pipelines, an automated cross-source correlation engine, a CIA Triad scoring matrix, and an interactive Shards-style investigation dashboard.
 
----
-
-## 🔍 Forensic Techniques Supported
-
-1. **Authentication & System Log Forensics**
-   - Brute-force detection (failed attempts thresholding)
-   - Off-hours anomalous login identification (night/weekend access)
-   - Unknown and untrusted IP geolocation analysis
-
-2. **Network Packet Capture (PCAP) Forensics**
-   - High-speed native packet dissection and PyShark integration
-   - Port scan detection (SYN scans, distributed sweeps)
-   - Large outbound data exfiltration transfers
-   - DNS query analysis and suspicious domain querying
-
-3. **Cryptographic File Integrity Verification**
-   - SHA-256 and MD5 cryptographic baseline auditing
-   - Tamper detection against recorded custody hashes
-   - Batch directory hashing and baseline change reports
-
-4. **Malware Signature & Behavioral Analysis**
-   - Known malicious hash database matching
-   - Shannon entropy analysis for encrypted/packed executables
-   - Suspicious extension & double-extension detection (`.exe`, `.scr`, `.ps1`, `.bat`)
-   - YARA rule signature matching
-
-5. **Document & File Metadata Forensics**
-   - PDF embedded metadata extraction (Author, Producer, Creation Date, Mod Date)
-   - Image EXIF parsing (camera make/model, timestamps, software)
-   - Filesystem timestamp discrepancy & anomaly auditing (timestomping detection)
-
-6. **Deleted-File Event & Anti-Forensics Analysis**
-   - Forensic deletion event log parsing
-   - Mass deletion & log clearing detection (evidence destruction attempts)
-   - Secure deletion tool marker identification (sdelete, shred indicators)
-   - Timeline reconstruction of anti-forensic activity
+The system supports dual-mode operation:
+1. **Live Backend Mode**: Connected to a high-throughput Python FastAPI REST service backed by SQLite and forensic analysis workers.
+2. **Interactive Live Demo Mode**: Fully standalone client-side execution for presentations, portfolio demonstrations, and static deployments (Vercel, GitHub Pages) without requiring a running backend.
 
 ---
 
-## 🛡️ CIA Triad Evaluation Matrix
+## Architecture and Core Modules
 
-CyberTrace evaluates and benchmarks all six forensic techniques across the **Confidentiality, Integrity, and Availability (CIA)** triad on a standardized 1–10 scale:
+### 1. Authentication & System Log Forensics
+- **Brute-Force Detection**: Time-window thresholding identifying repeated failed attempts per username/IP.
+- **Off-Hours Anomaly Detection**: Flags authentications occurring outside standard enterprise hours (20:00 - 06:00) and weekends.
+- **Geographic & Subnet Risk Auditing**: Highlights access requests originating from untrusted CIDR blocks.
 
-| Forensic Technique | Confidentiality | Integrity | Availability | Total Score | Key Contribution |
+### 2. Network Packet Capture (PCAP) Forensics
+- **Deep Packet Inspection**: Native frame parsing and PyShark protocol dissection.
+- **Port Scan Identification**: Recognizes SYN scan patterns and distributed horizontal sweeps.
+- **Data Exfiltration Detection**: Detects large outbound streams exceeding configurable transfer thresholds.
+- **DNS Query Auditing**: Tracks suspicious domain queries and TXT record tunneling attempts.
+
+### 3. Cryptographic File Integrity & Chain of Custody
+- **Cryptographic Auditing**: Computes SHA-256 and MD5 hashes across evidence artifacts.
+- **Tamper Detection**: Validates incoming file hashes against an immutable custody baseline ledger.
+- **Client-Side Hashing**: In Live Demo Mode, uses the browser Web Crypto API (`crypto.subtle.digest`) for in-memory hashing without server dependency.
+
+### 4. Malware Signature & Behavioral Analysis
+- **Known Threat Matching**: Queries known threat hashes against high-risk malware registries.
+- **Shannon Entropy Gauge**: Measures byte randomness (0-8 scale) to identify packed, obfuscated, or encrypted payloads.
+- **Heuristic Pattern Engine**: Evaluates executable file headers, suspicious extensions, and YARA signature indicators.
+
+### 5. Document & File Metadata Forensics
+- **PDF & Office Metadata Extraction**: Parses author, producer, creation/modification timestamps, and tool signatures.
+- **Tamper & Discrepancy Auditing**: Compares declared document creation times against filesystem access records to detect timestomping.
+
+### 6. Anti-Forensics & Deletion Event Analysis
+- **Deletion Event Chronology**: Parses forensic deletion events to identify mass purging attempts.
+- **Wiping Tool Detection**: Identifies artifacts left by secure deletion utilities (e.g., Sysinternals `sdelete`, Linux `shred`).
+
+### 7. Correlation Engine & CIA Triad Scoring
+- Aggregates findings from all six modules into an overall case risk score (0-100) and confidence tier.
+- Maps findings across the Confidentiality, Integrity, and Availability (CIA) triad.
+- Visualizes metrics using dynamic Plotly radar and grouped comparative charts.
+
+---
+
+## CIA Triad Evaluation Matrix
+
+| Forensic Technique | Confidentiality | Integrity | Availability | Composite Score | Primary Capability |
 |---|:---:|:---:|:---:|:---:|---|
-| **Log Forensics** | 8/10 | 8/10 | 7/10 | **23/30** | Detects unauthorized access & event timelines |
-| **Network Forensics** | 9/10 | 7/10 | 9/10 | **25/30** | Identifies exfiltration, scans & DoS disruptions |
-| **File Integrity Analysis** | 5/10 | 10/10 | 7/10 | **22/30** | Mathematically proves file tampering |
-| **Malware Signature Analysis** | 8/10 | 8/10 | 8/10 | **24/30** | Identifies malicious payload & persistence |
-| **Metadata Forensics** | 6/10 | 7/10 | 5/10 | **18/30** | Reconstructs user context & timestamps |
-| **Deleted-File Analysis** | 7/10 | 9/10 | 6/10 | **22/30** | Detects anti-forensic evidence destruction |
+| **Log Forensics** | 8/10 | 8/10 | 7/10 | **23/30** | Unauthorized access identification & timeline mapping |
+| **Network Forensics** | 9/10 | 7/10 | 9/10 | **25/30** | Data exfiltration, scan sweeps, and service disruption |
+| **File Integrity** | 5/10 | 10/10 | 7/10 | **22/30** | Mathematical proof of file tampering |
+| **Malware Analysis** | 8/10 | 8/10 | 8/10 | **24/30** | Malicious payload detection and persistence analysis |
+| **Metadata Forensics** | 6/10 | 7/10 | 5/10 | **18/30** | Author provenance and timestamp reconstruction |
+| **Anti-Forensics** | 7/10 | 9/10 | 6/10 | **22/30** | Evidence destruction identification & recovery |
 
 ---
 
-## 📁 Repository Structure
+## Live Demo Feature
+
+CyberTrace includes a built-in **Live Demo Mode** designed specifically for web hosting, project showcases, and evaluations where hosting a dedicated Python backend is unnecessary or prohibited:
+
+- **Instant Switching**: Toggle between "Live Demo Mode" and "Backend API Mode" directly from the top navigation bar.
+- **Multi-Case Investigation**: Switch seamlessly between three pre-configured forensic cases:
+  - *Case CR-2026-0881*: Financial Database Intrusion & Ransomware Exfiltration.
+  - *Case CR-2026-0904*: Insider Document Exfiltration & Metadata Alteration.
+  - *Case CR-2026-0918*: Supply Chain Tampering & Anti-Forensics Shredding.
+- **In-Browser Interactive Workflows**:
+  - Drag and drop evidence files to calculate genuine SHA-256 hashes via the browser's native Web Crypto API.
+  - Run instant client-side log, network, malware, metadata, and anti-forensics simulations.
+  - Generate full multi-page PDF forensic evidence reports on the fly using `jspdf` and `jspdf-autotable`.
+
+---
+
+## Project Structure
 
 ```
-├── .github/workflows/
-│   └── deploy-pages.yml         # GitHub Actions CI/CD for GitHub Pages
-├── dashboard/                   # React + TypeScript Web Dashboard
-│   ├── public/                  # Static assets and index.html
-│   ├── src/
-│   │   ├── components/          # Forensic UI modules (Overview, Logs, PCAP, etc.)
-│   │   ├── App.tsx              # Main dashboard application shell
-│   │   └── declarations.d.ts    # TypeScript type definitions
-│   ├── package.json             # NPM package dependencies
-│   └── tsconfig.json            # TypeScript configuration
-├── evidence/                    # Synthetic evidence files for testing & demo
-│   ├── auth_logs.csv            # Authentication attempt logs
-│   ├── sample_capture.pcap      # Network packet capture
-│   ├── file_events.csv          # Filesystem deletion & modification events
-│   ├── incident_briefing.pdf    # PDF document with forensic metadata
-│   ├── users.csv                # Baseline integrity file
-│   └── users_tampered.csv       # Tampered file sample
-├── src/
-│   └── api/                     # Python FastAPI Backend
-│       ├── app.py               # REST API endpoints & lifespan handler
-│       ├── database.py          # SQLite schema & custody registry
-│       ├── seed_data.py         # Synthetic case generator
-│       ├── log_forensics.py     # Technique 1: Log analyzer
-│       ├── network_forensics.py # Technique 2: PCAP analyzer
-│       ├── file_integrity.py    # Technique 3: Cryptographic hashing
-│       ├── malware_analysis.py  # Technique 4: Malware signatures & entropy
-│       ├── metadata_forensics.py# Technique 5: PDF/EXIF metadata
-│       ├── deleted_file_analysis.py # Technique 6: Anti-forensics analyzer
-│       └── correlation_engine.py# Cross-technique risk scoring
-├── tests/
-│   └── test_forensics.py        # Automated test suite covering all modules
-├── pyrightconfig.json           # Python language server path configuration
+├── vercel.json                  # Vercel deployment configuration
 ├── requirements.txt             # Python backend dependencies
-└── README.md                    # Project documentation
+├── pyrightconfig.json           # Python static analysis configuration
+├── .github/workflows/
+│   └── deploy-pages.yml         # GitHub Actions workflow for GitHub Pages
+├── dashboard/                   # React + TypeScript frontend
+│   ├── public/
+│   │   ├── index.html           # HTML template with CDN Plotly integration
+│   │   └── manifest.json        # Web app manifest
+│   ├── src/
+│   │   ├── components/          # Forensic UI modules
+│   │   │   ├── CaseOverview.tsx
+│   │   │   ├── EvidenceRegistry.tsx
+│   │   │   ├── LogAnalysis.tsx
+│   │   │   ├── NetworkAnalysis.tsx
+│   │   │   ├── MalwareAnalysis.tsx
+│   │   │   ├── MetadataAnalysis.tsx
+│   │   │   ├── DeletedFileAnalysis.tsx
+│   │   │   ├── CiaComparison.tsx
+│   │   │   └── ReportGenerator.tsx
+│   │   ├── icons.tsx            # Clean vector SVG icons
+│   │   ├── mockData.ts          # Embedded cases for Live Demo mode
+│   │   ├── shards-theme.css     # Shards dashboard design system
+│   │   ├── App.tsx              # Main dashboard shell and navigation
+│   │   └── index.tsx            # Application entrypoint
+│   └── package.json
+├── evidence/                    # Synthetic evidence artifacts
+│   ├── auth_logs.csv
+│   ├── sample_capture.pcap
+│   ├── file_events.csv
+│   ├── incident_briefing.pdf
+│   ├── users.csv
+│   └── users_tampered.csv
+├── src/api/                     # FastAPI backend
+│   ├── app.py                   # REST endpoints & lifespan lifecycle
+│   ├── database.py              # SQLite schema & custody management
+│   ├── seed_data.py             # Synthetic case generator
+│   ├── log_forensics.py         # Log parser and anomaly detector
+│   ├── network_forensics.py     # PCAP and flow inspector
+│   ├── file_integrity.py        # Cryptographic auditing engine
+│   ├── malware_analysis.py      # Shannon entropy and YARA matcher
+│   ├── metadata_forensics.py    # Document metadata parser
+│   ├── deleted_file_analysis.py # Anti-forensics and timeline reconstruction
+│   └── correlation_engine.py    # Cross-source correlation & CIA scoring
+└── tests/
+    └── test_forensics.py        # Complete automated test suite
 ```
 
 ---
 
-## 🚀 Quickstart Guide
+## Deployment Guide
 
-### 1. Backend Setup (FastAPI)
+### Deploying to Vercel
 
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/AdityaWagh19/CyberTrace-CSDF-Mini-Project.git
-   cd CyberTrace-CSDF-Mini-Project
-   ```
+The project includes root-level `vercel.json` configuration for zero-configuration deployment:
 
-2. **Install Python dependencies**:
-   ```bash
-   pip install -r requirements.txt
-   ```
+1. Push your repository to GitHub.
+2. Log in to [Vercel](https://vercel.com/) and click **Add New Project**.
+3. Import the `CyberTrace-CSDF-Mini-Project` repository.
+4. Set the following build settings (automatically detected from `vercel.json`):
+   - **Framework Preset**: Create React App
+   - **Build Command**: `cd dashboard && npm run build`
+   - **Output Directory**: `dashboard/build`
+5. Click **Deploy**.
 
-3. **Start the API server**:
-   ```bash
-   python -m uvicorn app:app --app-dir src/api --host 127.0.0.1 --port 8000 --reload
-   ```
-   Interactive Swagger API docs will be available at: `http://127.0.0.1:8000/docs`.
+The deployed site operates immediately in **Live Demo Mode**, allowing any evaluator to test all forensic modules, run simulations, inspect CIA charts, and export PDF reports directly in the browser.
 
-### 2. Frontend Setup (React Dashboard)
+### Deploying to GitHub Pages
 
-1. **Navigate to the dashboard directory**:
-   ```bash
-   cd dashboard
-   ```
-
-2. **Install dependencies and start development server**:
-   ```bash
-   npm install
-   npm start
-   ```
-   The interactive dashboard will open at: `http://localhost:3000`.
+The included workflow [deploy-pages.yml](.github/workflows/deploy-pages.yml) automates static deployment:
+1. Navigate to repository **Settings > Pages > Build and deployment**.
+2. Select **Source: GitHub Actions**.
+3. Commit to the `main` branch to trigger the build and deployment.
 
 ---
 
-## 🧪 Running Automated Tests
+## Local Development Setup
 
-Run the full pytest suite from the project root:
+### 1. Backend (FastAPI)
+
+Prerequisites: Python 3.10+
 
 ```bash
-pytest tests/test_forensics.py -v
+# Clone the repository
+git clone https://github.com/AdityaWagh19/CyberTrace-CSDF-Mini-Project.git
+cd CyberTrace-CSDF-Mini-Project
+
+# Install backend dependencies
+pip install -r requirements.txt
+
+# Launch FastAPI server
+python -m uvicorn app:app --app-dir src/api --host 127.0.0.1 --port 8000 --reload
 ```
 
-All 9 end-to-end tests verify:
-- SQLite schema initialization & synthetic seeding
-- Log forensics & brute-force detection
-- Network PCAP dissection & large transfer detection
-- File cryptographic integrity & tamper detection
-- Malware hash matching & entropy calculation
-- PDF and file metadata extraction
-- Anti-forensics & mass deletion detection
-- Correlation engine CIA score aggregation
-- FastAPI REST endpoints
+Interactive API documentation will be accessible at `http://127.0.0.1:8000/docs`.
 
----
+### 2. Frontend (React + TypeScript)
 
-## 🌐 Deployment
+Prerequisites: Node.js 18+ and npm
 
-### GitHub Pages (Frontend)
-The React dashboard is configured for automatic deployment to **GitHub Pages** via the included [deploy-pages.yml](.github/workflows/deploy-pages.yml) workflow.
-- In your GitHub repository: Go to **Settings > Pages > Build and deployment**.
-- Select **Source: GitHub Actions**.
-- On push to `main`, GitHub Actions automatically builds and deploys the static dashboard.
-- *Note*: When accessed on GitHub Pages without a local backend, the dashboard seamlessly operates in **Interactive Demo Mode**, showcasing pre-loaded cases, CIA spider radar charts, and sample analysis results.
-
-### Backend Hosting (FastAPI)
-The backend can be deployed to any platform supporting Python containers (e.g. Render, Railway, Hugging Face Spaces):
 ```bash
-uvicorn app:app --app-dir src/api --host 0.0.0.0 --port $PORT
+cd dashboard
+
+# Install dependencies
+npm install
+
+# Start local development server
+npm start
 ```
-Point `REACT_APP_API_URL` in `dashboard/.env` to your deployed backend URL.
+
+The Shards dashboard will open at `http://localhost:3000`.
 
 ---
 
-## 📄 License
-This project is licensed under the MIT License.
+## Automated Verification
+
+Execute the pytest suite covering all forensic modules, database persistence, and REST endpoints:
+
+```bash
+python -m pytest tests/test_forensics.py -v
+```
+
+Test coverage includes:
+- SQLite schema generation and synthetic case seeding.
+- Authentication log ingestion and brute-force thresholding.
+- PCAP frame dissection and exfiltration identification.
+- Cryptographic hash verification and baseline comparison.
+- Shannon entropy calculation and malicious hash lookup.
+- Document metadata extraction and timestomp detection.
+- File deletion event parsing and secure wiper detection.
+- Risk aggregation and CIA matrix scoring.
+- FastAPI endpoint responses and schemas.
+
+---
+
+## Technical Specifications
+
+- **Frontend**: React 19, TypeScript, React-Bootstrap, Plotly CDN, Recharts, jsPDF, AutoTable.
+- **Backend**: FastAPI, Uvicorn, SQLite3, PyShark, PyPDF, Scapy, NumPy.
+- **Design System**: Shards Dashboard aesthetic (Inter font, subtle card borders, KPI metric cards with SVG sparklines, zero emojis, clean SVG iconography).
+- **License**: MIT
