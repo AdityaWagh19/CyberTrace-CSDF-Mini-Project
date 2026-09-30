@@ -6,6 +6,5 @@
   "python.autoComplete.extraPaths": [
     "./src/api",
     "./src"
-  ],
-  "python.defaultInterpreterPath": "C:\\Program Files\\Python312\\python.exe"
+  ]
 }

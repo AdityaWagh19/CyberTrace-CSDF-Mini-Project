@@ -76,40 +76,46 @@ Each forensic pipeline is quantitatively evaluated on a standardized 1–10 scal
 
 ## System Architecture
 
+```mermaid
+graph TD
+    subgraph UI ["Presentation Layer (React 19 / TypeScript)"]
+        A["Shards Dashboard Interface"]
+        B["Dynamic Plotly Radar & Bar Charts"]
+        C["Client-Side Web Crypto SHA-256"]
+        D["Interactive Live Demo Engine"]
+        E["Automated PDF Report Generator"]
+    end
+
+    subgraph API ["Application & Correlation Layer"]
+        F["FastAPI REST & Serverless Endpoints"]
+        G["Cross-Source Correlation Engine"]
+        H["Risk Severity Aggregator"]
+        I["CIA Triad Benchmark Evaluator"]
+    end
+
+    subgraph Engines ["Forensic Analysis Pipelines"]
+        J["Authentication & Log Forensics"]
+        K["Network PCAP Packet Inspector"]
+        L["Shannon Entropy & Malware Scanner"]
+        M["Document Metadata & Timestomp Audit"]
+        N["Anti-Forensics & Deletion Reconstructor"]
+    end
+
+    subgraph Crypto ["Cryptographic Subsystem"]
+        O["SHA-256 & MD5 Verification Engine"]
+        P["Chain of Custody Integrity Ledger"]
+        Q["Secure Wiper Signature Detector"]
+    end
+
+    subgraph Storage ["Evidence & Data Storage"]
+        R["SQLite Evidence Database"]
+        S["Virtual /tmp Evidence Directory"]
+        T["Embedded Multi-Case Datasets"]
+    end
+
+    UI -->|"REST API / Web Crypto"| API
+    API --> Engines
+    API --> Crypto
+    API --> Storage
 ```
-+-------------------------------------------------------------------------+
-|                  Presentation Layer (React 19 / TypeScript)             |
-|  - Shards Dashboard Layout         - Interactive Live Demo Simulation   |
-|  - Dynamic Plotly Radar Visuals    - Client-side Web Crypto SHA-256     |
-|  - Zero Emojis / SVG System        - Automated PDF Report Generation    |
-+-------------------------------------------------------------------------+
-                                    |
-                            REST API / In-Memory
-                                    v
-+-------------------------------------------------------------------------+
-|                     Application & Correlation Layer                     |
-|  - Fast-API Serverless Endpoints   - Cross-Source Correlation Engine    |
-|  - Risk Aggregator & Scorer        - CIA Triad Benchmark Evaluator      |
-+-------------------------------------------------------------------------+
-                                    |
-          +-------------------------+-------------------------+
-          |                         |                         |
-          v                         v                         v
-+-------------------+     +-------------------+     +-------------------+
-|  Forensic Engines |     | Cryptographic Sub |     | Evidence Storage  |
-|  - Log Analyzer   |     | - SHA-256 Engine  |     | - SQLite Ledger   |
-|  - PCAP Inspector |     | - MD5 Engine      |     | - Custody Vault   |
-|  - Entropy Gauge  |     | - Shannon Entropy |     | - In-Memory Cases |
-|  - Metadata Audit |     | - Wiper Detection |     | - Virtual /tmp    |
-+-------------------+     +-------------------+     +-------------------+
-```
 
----
-
-## Academic References
-
-1. Casey, E. (2011). *Digital Evidence and Computer Crime: Forensic Science, Computers, and the Internet*. Academic Press.
-2. Carrier, B. (2005). *File System Forensic Analysis*. Addison-Wesley Professional.
-3. Shannon, C. E. (1948). A Mathematical Theory of Communication. *Bell System Technical Journal*, 27(3), 379–423.
-4. Kent, K., Chevalier, S., Grance, T., & Dang, H. (2006). *Guide to Computer Security Log Management*. NIST Special Publication 800-92.
-5. Lyda, R., & Hamrock, J. (2007). Using Entropy Analysis to Find Encrypted and Packed Malware. *IEEE Security & Privacy*, 5(2), 40–45.
