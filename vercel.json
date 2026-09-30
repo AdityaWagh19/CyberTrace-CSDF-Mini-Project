@@ -1,6 +1,8 @@
 {
-  "buildCommand": "cd dashboard && npm run build",
+  "installCommand": "cd dashboard && npm install --legacy-peer-deps",
+  "buildCommand": "cd dashboard && npm install --legacy-peer-deps && npm run build",
   "outputDirectory": "dashboard/build",
+  "framework": "create-react-app",
   "rewrites": [
     {
       "source": "/api/(.*)",
