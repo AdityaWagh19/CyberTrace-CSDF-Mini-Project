@@ -465,3 +465,32 @@ body {
   }
 }
 
+/* High-Fidelity Print & Save-to-PDF Styling */
+@media print {
+  body {
+    background-color: #ffffff !important;
+  }
+  .shards-sidebar,
+  .shards-navbar,
+  .no-print,
+  .btn {
+    display: none !important;
+  }
+  .shards-main {
+    margin-left: 0 !important;
+    padding: 0 !important;
+  }
+  .shards-content {
+    padding: 0 !important;
+  }
+  .shards-card {
+    border: none !important;
+    box-shadow: none !important;
+    margin-bottom: 0 !important;
+  }
+  .table-responsive {
+    overflow: visible !important;
+  }
+}
+
+

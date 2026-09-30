@@ -252,9 +252,19 @@ function App() {
               <div className="shards-page-category">Investigation Dossier</div>
               <h1 className="shards-page-title">{currentCase.case_name}</h1>
             </div>
-            <div className="d-flex align-items-center gap-3 text-muted small">
-              <span>Status: <strong className="text-success">{currentCase.status}</strong></span>
-              <span>Investigator: <strong className="text-dark">John Doe</strong></span>
+            <div className="d-flex align-items-center gap-3">
+              <span className="text-muted small">Status: <strong className="text-success">{currentCase.status}</strong></span>
+              <span className="text-muted small">Investigator: <strong className="text-dark">John Doe</strong></span>
+              <Button
+                variant="outline-secondary"
+                size="sm"
+                onClick={() => setActiveTab("report")}
+                className="d-flex align-items-center gap-1"
+                style={{ fontSize: "0.82rem", fontWeight: 600 }}
+              >
+                <IconReport size={13} />
+                <span>Export Dossier</span>
+              </Button>
             </div>
           </div>
 
